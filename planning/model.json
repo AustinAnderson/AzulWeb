@@ -1,0 +1,109 @@
+/*
+0=blank
+6=startig player marker
+1=blue
+2=yellow
+3=red
+4=black
+5=white
+*/
+
+
+//tiles to be represented by 1-5, 0 for blank, 6 for 1st token
+//floor penalty values and board config to be
+
+//only actions the player takes is to choose a color from either one of the factories or the centerOfTable and which patternLine to place in
+//client request model
+{
+    "playerIndex":0,
+    //action meaning take all the 2 tiles from the center of the table and put them in the second patternLine row
+    "action":{
+        "fromFactory":false,
+        "tileType":2,
+        "factoryIndex":0,//zero since default, or fromFactory =true and this will be the index
+        "patternLineIndex":1
+    },
+    "gameState":{
+        "changeCount":0,//for syncing clients, if one doesn't match end game
+        "sharedData":{
+            "config":{
+                "floorPenalties": [-1,-1,-2,-2,-2,-3,-3],
+                "wallLayoutToMatch":[
+                    [1,2,3,4,5],
+                    [5,1,2,3,4],
+                    [4,5,1,2,3],
+                    [3,4,5,1,2],
+                    [2,3,4,5,1]
+                ]
+            },
+            "discardPile":[1,1,2,3,2,1,3,2,4,5],//list of tiles in the box
+            "centerOfTable": [6,2,3],
+            "bag":[1,2,3,4,5,2,3,4,5,1,2,3,4,4,5,3,4,2,3,4,2,3,1,...]//not shown but serialized in case of reshuffle from discard
+            "factories": [
+                [0,0,0,0],
+                [1,2,3,1],
+                [1,2,2,1],
+                [1,1,1,1],
+                [1,2,2,1]
+            ]
+        },
+        "playerData":[
+            {//need to display other players' boards for strategy
+                "score":0,
+                "patternLines":[
+                            [0],
+                          [0,0],
+                        [0,0,0],
+                      [0,0,0,0],
+                    [0,0,0,0,0]
+                ],
+                "wall":[
+                    [1,1,1,0,0],
+                    [0,0,0,1,0],
+                    [0,1,0,1,0],
+                    [0,0,0,0,0],
+                    [0,0,1,0,0]
+                ],
+                "floorLine":[ 0, 0, 0, 0, 0, 0, 0]
+            },
+            {
+                "score":0,
+                "patternLines":[
+                            [0],
+                          [0,0],
+                        [0,0,0],
+                      [0,0,0,0],
+                    [0,0,0,0,0]
+                ],
+                "wall":[
+                    [1,1,1,0,0],
+                    [0,1,0,0,0],
+                    [0,1,1,1,0],
+                    [0,0,0,0,0],
+                    [0,0,1,0,0]
+                ],
+                "floorLine":[ 0, 0, 0, 0, 0, 0, 0]
+            }
+        ]
+    }
+}
+//server gets posted the above model,
+//and validates according to game rules, 400 with displayable reason if fail, else
+//crafts a response as a json of deltas to be broadcast via webhooks (signlR?) and responds 204 after broadcasting
+{
+    "changes":[
+        {   
+            "jpath": "sharedData.centerOfTable",
+            "newValue": [3]
+        },
+        {
+            "jpath": "playerData[0].patternLines[1]",
+            "newValue": [0,2]
+        },
+        { 
+            "jpath": "playerData[0].floorLine[0]",
+            "newValue":6
+        }
+    ]
+}
+//client has a queue of changes, and doesn't allow action until its empty, dequeues changelist, animates it, dequeues the next, ect
