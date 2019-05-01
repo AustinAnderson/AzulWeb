@@ -20,7 +20,7 @@ namespace Models.Client
                 }
                 if(DiscardPile!=null)
                 {
-                    for(int i=0;i<DiscardPile.length;i++)
+                    for(int i=0;i<DiscardPile.Count;i++)
                     {
                         if(DiscardPile[i]!=null)
                             hash=hash*31+DiscardPile[i].GetHashCode();
@@ -28,7 +28,7 @@ namespace Models.Client
                 }
                 if(CenterOfTable!=null)
                 {
-                    for(int i=0;i<CenterOfTable.length;i++)
+                    for(int i=0;i<CenterOfTable.Count;i++)
                     {
                         if(CenterOfTable[i]!=null)
                             hash=hash*31+CenterOfTable[i].GetHashCode();
@@ -36,7 +36,7 @@ namespace Models.Client
                 }
                 if(Bag!=null)
                 {
-                    for(int i=0;i<Bag.length;i++)
+                    for(int i=0;i<Bag.Count;i++)
                     {
                         if(Bag[i]!=null)
                             hash=hash*31+Bag[i].GetHashCode();
@@ -44,8 +44,8 @@ namespace Models.Client
                 }
                 if(Factories!=null)
                 {
-                    for(int i=0;i<Factories.length;i++){
-                        for(int j=0;j<Factories[i]?.length??0;j++){
+                    for(int i=0;i<Factories.Length;i++){
+                        for(int j=0;j<(Factories[i]?.Length??0);j++){
                             if(Factories[i][j]!=null)
                                 hash=hash*31+Factories[i][j].GetHashCode();
                         }

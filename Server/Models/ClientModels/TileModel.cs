@@ -7,6 +7,6 @@ namespace Models.Client
         public int Id {get;set;}
         public TileType Type {get;set;}
         //id should be unique, and there for exactly identifies model
-        public override int GetHashCode()=>Id
+        public override int GetHashCode()=>Id;
     }
 }

@@ -14,7 +14,7 @@ namespace Models.Client
                 if(SharedData!=null) hash = hash * 31 + SharedData.GetHashCode();
                 if(PlayerData!=null)
                 {
-                    for(int i=0;i<PlayerData.length;i++){
+                    for(int i=0;i<PlayerData.Count;i++){
                         if(PlayerData[i]!=null)
                         {
                             hash = hash * 31 + PlayerData[i].GetHashCode();

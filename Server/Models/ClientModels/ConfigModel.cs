@@ -11,8 +11,8 @@ namespace Models.Client
             {
                 unchecked
                 {
-                    for(int i=0;i<WallLayoutToMatch.length;i++){
-                        for(int j=0;j<WallLayoutToMatch[i].length;j++){
+                    for(int i=0;i<WallLayoutToMatch.Length;i++){
+                        for(int j=0;j<WallLayoutToMatch[i].Length;j++){
                             hash=hash*31+((int)WallLayoutToMatch[i][j]);
                         }
                     }
@@ -22,7 +22,7 @@ namespace Models.Client
             {
                 unchecked
                 {
-                    for(int i=0;i<FloorPenalties.length;i++){
+                    for(int i=0;i<FloorPenalties.Length;i++){
                         hash=hash*31+FloorPenalties[i];
                     }
                 }
