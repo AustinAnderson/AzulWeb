@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Models.Hashing;
+
 namespace Models.Client
 {
     public class PlayerDataModel
@@ -11,43 +13,16 @@ namespace Models.Client
 
         public override int GetHashCode()
         {
-            int hash;
-            unchecked
+            int hash=17;
+            ModelHashUtils.CombineHash(ref hash,Score);
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashListOfList(PatternLines));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(FloorLine));
+            if(Wall!=null)
             {
-                //17 * 31 + score for init
-                hash = 527 + Score;
-                if(PatternLines!=null)
+                for(int i=0;i<Wall.Length;i++)
                 {
-                    for(int i=0;i<PatternLines.Count;i++)
-                    {
-                        for(int j=0;j<(PatternLines[i]?.Count??0);j++)
-                        {
-                            if(PatternLines[i][j]!=null)
-                                hash = hash * 31 + PatternLines[i][j].GetHashCode();
-                        }
-                    }
+                    ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashBoolList(Wall[i]));
                 }
-                if(Wall!=null)
-                {
-                    for(int i=0;i<Wall.Length;i++)
-                    {
-                        int row=0;
-                        for(int j=0;j<Wall[i].Length;j++)
-                        {
-                            row=row<<1|(Wall[i][j]?1:0);//row as an int
-                        }
-                        hash = hash * 31 + row;
-                    }
-                }
-                if(FloorLine!=null)
-                {
-                    for(int i=0;i<FloorLine.Length;i++)
-                    {
-                        if(FloorLine[i]!=null)
-                            hash= hash * 31 + FloorLine[i].GetHashCode();
-                    }
-                }
-            
             }
             return hash;
         }

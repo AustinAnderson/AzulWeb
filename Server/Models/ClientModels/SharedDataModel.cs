@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Models.Hashing;
+
 namespace Models.Client
 {
     public class SharedDataModel
@@ -12,46 +14,11 @@ namespace Models.Client
         public override int GetHashCode()
         {
             int hash=17;
-            unchecked
-            {
-                if(Config!=null)
-                {
-                    hash=hash*31+Config.GetHashCode();
-                }
-                if(DiscardPile!=null)
-                {
-                    for(int i=0;i<DiscardPile.Count;i++)
-                    {
-                        if(DiscardPile[i]!=null)
-                            hash=hash*31+DiscardPile[i].GetHashCode();
-                    }
-                }
-                if(CenterOfTable!=null)
-                {
-                    for(int i=0;i<CenterOfTable.Count;i++)
-                    {
-                        if(CenterOfTable[i]!=null)
-                            hash=hash*31+CenterOfTable[i].GetHashCode();
-                    }
-                }
-                if(Bag!=null)
-                {
-                    for(int i=0;i<Bag.Count;i++)
-                    {
-                        if(Bag[i]!=null)
-                            hash=hash*31+Bag[i].GetHashCode();
-                    }
-                }
-                if(Factories!=null)
-                {
-                    for(int i=0;i<Factories.Length;i++){
-                        for(int j=0;j<(Factories[i]?.Length??0);j++){
-                            if(Factories[i][j]!=null)
-                                hash=hash*31+Factories[i][j].GetHashCode();
-                        }
-                    }
-                }
-            }
+            ModelHashUtils.CombineHash(ref hash,Config?.GetHashCode());
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(DiscardPile));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(CenterOfTable));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(Bag));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashListOfList(Factories));
             return hash;
         }
     }

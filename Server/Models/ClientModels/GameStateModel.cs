@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Models.Hashing;
+
 namespace Models.Client
 {
     public class GameStateModel
@@ -9,19 +11,8 @@ namespace Models.Client
         public override int GetHashCode()
         {
             int hash = 17;
-            unchecked
-            {
-                if(SharedData!=null) hash = hash * 31 + SharedData.GetHashCode();
-                if(PlayerData!=null)
-                {
-                    for(int i=0;i<PlayerData.Count;i++){
-                        if(PlayerData[i]!=null)
-                        {
-                            hash = hash * 31 + PlayerData[i].GetHashCode();
-                        }
-                    }
-                }
-            }
+            ModelHashUtils.CombineHash(ref hash,SharedData?.GetHashCode());
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(PlayerData));
             return hash;
         }
     }
