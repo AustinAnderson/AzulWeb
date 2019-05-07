@@ -5,25 +5,13 @@ using Server.Models.Cloning;
 
 namespace Models.Client
 {
-    public class SharedDataModel:IDeepCopyable<SharedDataModel>
+    public class SharedDataModel
     {
         public ConfigModel Config {get;set;}
         public List<TileModel> DiscardPile {get;set;}
         public List<TileModel> CenterOfTable {get;set;}
         public List<TileModel> Bag {get;set;}
         public FactoryModel[] Factories {get;set;}
-
-        public SharedDataModel DeepCopy()
-        {
-            return new SharedDataModel
-            {
-                Config=Config.DeepCopy(),
-                DiscardPile=DeepCopyObj<TileModel>.List(DiscardPile),
-                CenterOfTable=DeepCopyObj<TileModel>.List(CenterOfTable),
-                Bag=DeepCopyObj<TileModel>.List(Bag),
-                Factories=DeepCopyObj<FactoryModel>.Array(Factories)
-            };
-        }
 
         public override int GetHashCode()
         {

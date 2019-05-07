@@ -4,7 +4,7 @@ using Server.Models.Cloning;
 
 namespace Models.Client
 {
-    public class FactoryModel:IDeepCopyable<FactoryModel>
+    public class FactoryModel
     {
         public bool IsEmpty=>  TileOne==null&&TileTwo==null&&
                              TileThree==null&&TileFour==null;
@@ -25,18 +25,6 @@ namespace Models.Client
                 }
             }
         }
-
-        public FactoryModel DeepCopy()
-        {
-            return new FactoryModel
-            {
-                TileOne=TileOne?.DeepCopy(),
-                TileTwo=TileTwo?.DeepCopy(),
-                TileThree=TileThree?.DeepCopy(),
-                TileFour=TileFour?.DeepCopy(),
-            };
-        }
-
         public override int GetHashCode()
         {
             int hash=17;

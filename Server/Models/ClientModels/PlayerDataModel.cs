@@ -5,23 +5,12 @@ using Server.Models.Cloning;
 
 namespace Models.Client
 {
-    public class PlayerDataModel:IDeepCopyable<PlayerDataModel>
+    public class PlayerDataModel
     {
         public int Score {get;set;}
         public PatternLinesModel PatternLines {get;set;}
         public TileModel[][] Wall {get;set;}
         public TileModel[] FloorLine {get;set;}
-
-        public PlayerDataModel DeepCopy()
-        {
-            throw new NotImplementedException();
-            return new PlayerDataModel
-            {
-                Score=Score,
-                //TODO: do I need patternlines and and wall copying at all?
-                FloorLine=DeepCopyObj<TileModel>.Array(FloorLine)
-            };
-        }
 
         public override int GetHashCode()
         {
