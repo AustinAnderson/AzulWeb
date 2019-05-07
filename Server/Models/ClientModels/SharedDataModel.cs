@@ -32,7 +32,7 @@ namespace Models.Client
             ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(DiscardPile));
             ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(CenterOfTable));
             ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(Bag));
-            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashListOfList(Factories));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(Factories));
             return hash;
         }
     }

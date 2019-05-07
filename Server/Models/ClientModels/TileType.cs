@@ -4,7 +4,6 @@ namespace Models.Client
 {
     public enum TileType
     {
-        Blank,
         Blue,
         Yellow,
         Red,
