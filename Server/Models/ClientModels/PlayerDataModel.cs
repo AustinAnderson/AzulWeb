@@ -7,10 +7,12 @@ namespace Models.Client
 {
     public class PlayerDataModel
     {
-        public int Score {get;set;}
-        public PatternLinesModel PatternLines {get;set;}
-        public TileModel[][] Wall {get;set;}
-        public TileModel[] FloorLine {get;set;}
+        public int Score {get;set;}=0;
+        public PatternLinesModel PatternLines {get;set;} =new PatternLinesModel();
+        public TileModel[][] Wall {get;set;}=new TileModel[5][]{
+            new TileModel[5],new TileModel[5],new TileModel[5],new TileModel[5],new TileModel[5]
+        };
+        public TileModel[] FloorLine {get;set;}=new TileModel[7];
 
         public override int GetHashCode()
         {

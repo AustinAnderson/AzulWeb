@@ -12,6 +12,7 @@ namespace Models.Client
         public List<TileModel> CenterOfTable {get;set;}
         public List<TileModel> Bag {get;set;}
         public FactoryModel[] Factories {get;set;}
+        public int CurrentTurnsPlayersIndex{get;set;}
 
         public override int GetHashCode()
         {
@@ -21,6 +22,7 @@ namespace Models.Client
             ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(CenterOfTable));
             ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(Bag));
             ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(Factories));
+            ModelHashUtils.CombineHash(ref hash,CurrentTurnsPlayersIndex);
             return hash;
         }
     }

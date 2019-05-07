@@ -9,7 +9,7 @@ namespace Server.Logic
 {
     public class ClientActionValidator
     {
-        public ActionValidationFailedModel ValidateRequest(ClientRequestModel request)
+        public ActionValidationFailedModel ValidateRequest(ClientRequestModel request,Guid key,Guid iv)
         {
             if(request.GameStateHash!=request.GameState.GetHashCode()){
                 throw new BadRequestException("client is out of sync with server");
@@ -40,11 +40,11 @@ namespace Server.Logic
         private ActionValidationFailedModel CheckCenterOfTableHasType(ActionDescriptionModel action,SharedDataModel data)
         {
             ActionValidationFailedModel error=null;
-            if(!data.CenterOfTable.Any(x=>x.Type==action.tileType))
+            if(!data.CenterOfTable.Any(x=>x.Type==action.TileType))
             {
                 error=new ActionValidationFailedModel{
-                    ErrorOnFactory=false,
-                    Message=ClientFacingMessages.InvalidTileTypeForCenterOfTable(""+action.tileType)
+                    ErrorOnCenterOfTable=true,
+                    Message=ClientFacingMessages.InvalidTileTypeForCenterOfTable(""+action.TileType)
                 };
             }
             return error;
@@ -55,7 +55,7 @@ namespace Server.Logic
             if(data.CenterOfTable.Count==0)
             {
                 error=new ActionValidationFailedModel{
-                    ErrorOnFactory=false,
+                    ErrorOnCenterOfTable=true,
                     Message=ClientFacingMessages.NoDrawingFromEmptyCenterOfTable()
                 };
             }
@@ -69,7 +69,6 @@ namespace Server.Logic
             {
                 error=new ActionValidationFailedModel
                 {
-                    ErrorOnFactory=true,
                     FactoryIndex=action.FactoryIndex,
                     Message=ClientFacingMessages.NoDrawingFromEmptyFactory()
                 };
@@ -83,7 +82,7 @@ namespace Server.Logic
             var Factory=data.Factories[action.FactoryIndex];
             for(int i=0;i<Factory.IndexLimit;i++)
             {
-                if(Factory[i].Type==action.tileType){
+                if(Factory[i].Type==action.TileType){
                     matchingTile=true; 
                     break;
                 }
@@ -92,9 +91,8 @@ namespace Server.Logic
             {
                 error=new ActionValidationFailedModel
                 {
-                    ErrorOnFactory=true,
                     FactoryIndex=action.FactoryIndex,
-                    Message=ClientFacingMessages.InvalidTileTypeForFactory(""+action.tileType)
+                    Message=ClientFacingMessages.InvalidTileTypeForFactory(""+action.TileType)
                 };
             }
             return error;

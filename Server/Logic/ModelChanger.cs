@@ -19,14 +19,15 @@ namespace Server.Logic
             {
                 stateUpdates=HandleMoveFromCenterTable(request);
             }
+            throw new NotImplementedException();
         }
         private ResponseModel HandleMoveFromFactory(ClientRequestModel request)
         {
-            
+            throw new NotImplementedException();
         }
         private ResponseModel HandleMoveFromCenterTable(ClientRequestModel request)
         {
-
+            throw new NotImplementedException();
         }
         private bool ActionFinishesRound(SharedDataModel shared)
         {
@@ -39,7 +40,7 @@ namespace Server.Logic
         }
         private void HandleNextRound(ClientRequestModel request)
         {
-
+            throw new NotImplementedException();
         }
     }
 }
