@@ -57,20 +57,9 @@ namespace UnitTests.ModelTests
             Assert.ThrowsException<ArgumentOutOfRangeException>(()=>model.NameOf(-1),"for -1");
         }
         [TestMethod]
-        public void PatternLinesModelCanRetrieveName(){
-            throw new NotImplementedException();
-        }
-        [TestMethod]
-        public void PatternLinesModelCanRetrieveTile(){
-            throw new NotImplementedException();
-        }
-        [TestMethod]
-        public void PatternLinesModelCanSetTile(){
-            throw new NotImplementedException();
-        }
-        [TestMethod]
-        public void PatternLinesModelThrowsOnOutOfRange(){
-            throw new NotImplementedException();
+        public void PatternLinesModelConstructorInitializesLengths(){
+            PatternLinesModel plns=new PatternLinesModel();
+            Assert.AreEqual(4,plns[3].Length,"expected line 4 for be of length 4");
         }
     }
 }

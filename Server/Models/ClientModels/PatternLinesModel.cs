@@ -1,39 +1,35 @@
 using System;
 using System.Collections.Generic;
 using Models.Hashing;
+using Server.Models.ClientModels;
 
 namespace Models.Client
 {
-    public class PatternLinesModel
+    public class PatternLinesModel:AbstractIndexedModel<TileModel[]>
     {
-        private readonly Dictionary<int,(TileModel[] line,string name)> indexer;
         public PatternLinesModel(){
-            indexer=new Dictionary<int, (TileModel[] line, string name)>{
-                {0,(LineOne,nameof(LineOne))},
-                {1,(LineTwo,nameof(LineTwo))},
-                {2,(LineThree,nameof(LineThree))},
-                {3,(LineFour,nameof(LineFour))},
-                {4,(LineFive,nameof(LineFive))}
-            };
+            LineOne=new TileModel[1];
+            LineTwo=new TileModel[2];
+            LineThree=new TileModel[3];
+            LineFour=new TileModel[4];
+            LineFive=new TileModel[5];
         }
         //these should fill from left to right, client can display right to left if they want 
-        public TileModel[] LineOne {get;set;} = new TileModel[1];
-        public TileModel[] LineTwo {get;set;} = new TileModel[2];
-        public TileModel[] LineThree {get;set;} = new TileModel[3];
-        public TileModel[] LineFour {get;set;} = new TileModel[4];
-        public TileModel[] LineFive {get;set;} = new TileModel[5];
-        private (TileModel[] line,string name) GetOrThrow(int ndx){
-            if(ndx<0) throw new ArgumentOutOfRangeException("index must be positive and less than 5");
-            if(indexer.TryGetValue(ndx,out (TileModel[],string) val)){
-                return val;
-            }
-            throw new ArgumentOutOfRangeException("there are only 5 patternLines");
-        }
-        public TileModel[] this[int key]{
-            get=>GetOrThrow(key).line;
-        }
-        public string NameOf(int patternLineIndex)
-            =>GetOrThrow(patternLineIndex).name;
+        public TileModel[] LineOne {get=>this[0];set=>this[0]=value;}
+        public TileModel[] LineTwo {get=>this[1];set=>this[1]=value;}
+        public TileModel[] LineThree {get=>this[2];set=>this[2]=value;}
+        public TileModel[] LineFour {get=>this[3];set=>this[3]=value;}
+        public TileModel[] LineFive {get=>this[4];set=>this[4]=value;}
+        protected override Dictionary<int, string> GetIndexedNames()
+            =>new Dictionary<int, string>{
+                {0,nameof(LineOne)},
+                {1,nameof(LineTwo)},
+                {2,nameof(LineThree)},
+                {3,nameof(LineFour)},
+                {4,nameof(LineFive)}
+            };
+        public override int IndexLimit => 5;
+
         public override int GetHashCode()
         {
             int hash=17;
@@ -44,6 +40,7 @@ namespace Models.Client
             ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(LineFive));
             return hash;
         }
+
     }
 }
 

@@ -5,17 +5,18 @@ namespace Server.Models.ClientModels
 {
     ///adds an indexer and name to models that implement it, as long as any properties
     ///are done using the indexer
-    public abstract class AbstractIndexedModel<T> where T:new()
+    public abstract class AbstractIndexedModel<T>
     {
         private class Ref {
             public T item;
             public Ref(T t) => item=t;
+            public Ref(){}
         }
         private Dictionary<int,(Ref,string)> indexedProps;
         private void ConvertAndFillDict(Dictionary<int,string> childDict){
             indexedProps=new Dictionary<int, (Ref, string)>();
             foreach(var kvp in childDict){
-                indexedProps.Add(kvp.Key,(new Ref(new T()),kvp.Value));
+                indexedProps.Add(kvp.Key,(new Ref(),kvp.Value));
             }
         }
         private (Ref,string) GetOrThrow(int ndx){
