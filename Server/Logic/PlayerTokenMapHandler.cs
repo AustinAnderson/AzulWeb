@@ -8,22 +8,17 @@ using Newtonsoft.Json;
 
 namespace Server.Logic
 {
-    public class PlayerTokenMap
+    public class PlayerTokenMapHandler
     {
         private byte[] symetricEncKey;
         private byte[] IV;
-        private Dictionary<Guid,int> map=null;
-
-        public PlayerTokenMap(Guid symetricEncKey,Guid IV,Dictionary<Guid,int> initialMap):this(symetricEncKey,IV){
-            map=initialMap;
-        }
-        public PlayerTokenMap(Guid symetricEncKey,Guid IV){
+        public PlayerTokenMapHandler(Guid symetricEncKey,Guid IV){
             this.symetricEncKey=symetricEncKey.ToByteArray();
             this.IV=IV.ToByteArray();
         }
         //these two shamelessly adapted from 
         //https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.aes?view=netframework-4.8
-        public void SetToString(string encryptedRep)
+        public Dictionary<Guid,int> DecryptMap(string encryptedRep)
         {
             if(encryptedRep==null) 
                 throw new ArgumentNullException(nameof(encryptedRep));
@@ -56,11 +51,10 @@ namespace Server.Logic
                         }
                     }
                 }
-
             }
-            map=JsonConvert.DeserializeObject<Dictionary<Guid,int>>(plaintext);
+            return JsonConvert.DeserializeObject<Dictionary<Guid,int>>(plaintext);
         }
-        public string AsEncryptedJson()
+        public string EncryptedMap(Dictionary<Guid,int> map)
         {
             var plainText=JsonConvert.SerializeObject(map);
             byte[] encrypted;
@@ -90,32 +84,8 @@ namespace Server.Logic
                     }
                 }
             }
-
             // Return the encrypted bytes from the memory stream.
             return Convert.ToBase64String(encrypted);
-
-        }
-
-        public ICollection<Guid> Keys => ((IDictionary<Guid, int>)map).Keys;
-        public ICollection<int> Values => ((IDictionary<Guid, int>)map).Values;
-        public int Count => ((IDictionary<Guid, int>)map).Count;
-        public int this[Guid key] { get => ((IDictionary<Guid, int>)map)[key]; }
-        public bool ContainsKey(Guid key)
-        {
-            return ((IDictionary<Guid, int>)map).ContainsKey(key);
-        }
-        public bool TryGetValue(Guid key, out int value)
-        {
-            return ((IDictionary<Guid, int>)map).TryGetValue(key, out value);
-        }
-
-        public bool Contains(KeyValuePair<Guid, int> item)
-        {
-            return ((IDictionary<Guid, int>)map).Contains(item);
-        }
-        public IEnumerator<KeyValuePair<Guid, int>> GetEnumerator()
-        {
-            return ((IDictionary<Guid, int>)map).GetEnumerator();
         }
     }
 }

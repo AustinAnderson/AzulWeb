@@ -17,10 +17,10 @@ namespace Models.Client
             get{
                 if(key<0) throw new ArgumentOutOfRangeException("index must be positive and less than 4");
                 switch(key) {
-                    case 1: return TileOne;
-                    case 2: return TileTwo;
-                    case 3: return TileThree;
-                    case 4: return TileFour;
+                    case 0: return TileOne;
+                    case 1: return TileTwo;
+                    case 2: return TileThree;
+                    case 3: return TileFour;
                    default: throw new ArgumentOutOfRangeException("there are only 4 patternLines");
                 }
             }
@@ -28,10 +28,10 @@ namespace Models.Client
         public override int GetHashCode()
         {
             int hash=17;
-            ModelHashUtils.CombineHash(ref hash,TileOne.GetHashCode());
-            ModelHashUtils.CombineHash(ref hash,TileTwo.GetHashCode());
-            ModelHashUtils.CombineHash(ref hash,TileThree.GetHashCode());
-            ModelHashUtils.CombineHash(ref hash,TileFour.GetHashCode());
+            ModelHashUtils.CombineHash(ref hash,TileOne?.GetHashCode());
+            ModelHashUtils.CombineHash(ref hash,TileTwo?.GetHashCode());
+            ModelHashUtils.CombineHash(ref hash,TileThree?.GetHashCode());
+            ModelHashUtils.CombineHash(ref hash,TileFour?.GetHashCode());
             return hash;
         }
     }

@@ -5,6 +5,7 @@ namespace Models.Client
 {
     public class PatternLinesModel
     {
+        //these should fill from left to right, client can display right to left if they want 
         public TileModel[] LineOne {get;set;} = new TileModel[1];
         public TileModel[] LineTwo {get;set;} = new TileModel[2];
         public TileModel[] LineThree {get;set;} = new TileModel[3];
@@ -14,11 +15,11 @@ namespace Models.Client
             get{
                 if(key<0) throw new ArgumentOutOfRangeException("index must be positive and less than 5");
                 switch(key) {
-                    case 1: return LineOne;
-                    case 2: return LineTwo;
-                    case 3: return LineThree;
-                    case 4: return LineFour;
-                    case 5: return LineFive;
+                    case 0: return LineOne;
+                    case 1: return LineTwo;
+                    case 2: return LineThree;
+                    case 3: return LineFour;
+                    case 4: return LineFive;
                    default: throw new ArgumentOutOfRangeException("there are only 5 patternLines");
                 }
             }

@@ -10,10 +10,11 @@ namespace UnitTests.PlayerTokenMapTests
     {
         [TestMethod]
         public void ModelSurvivesRoundTrip(){
-            PlayerTokenMap setDirect=new PlayerTokenMap(Guid.NewGuid(),Guid.NewGuid(),getDict());
-            PlayerTokenMap toRoundTrip=new PlayerTokenMap(Guid.NewGuid(),Guid.NewGuid(),getDict()); 
-            toRoundTrip.SetToString(toRoundTrip.AsEncryptedJson());
-            AssertDictionariesSame(setDirect,toRoundTrip);
+            Dictionary<Guid,int> playerMap=getDict();
+            Dictionary<Guid,int> roundTripMap=getDict();
+            PlayerTokenMapHandler handler=new PlayerTokenMapHandler(Guid.NewGuid(),Guid.NewGuid());
+            roundTripMap=handler.DecryptMap(handler.EncryptedMap(roundTripMap));
+            AssertDictionariesSame(playerMap,roundTripMap);
         }
         private static Guid[] FixedGuidList=new Guid[6]{
             Guid.NewGuid(),Guid.NewGuid(),Guid.NewGuid(),Guid.NewGuid(),Guid.NewGuid(),Guid.NewGuid()
@@ -26,7 +27,7 @@ namespace UnitTests.PlayerTokenMapTests
             {FixedGuidList[4],8},
             {FixedGuidList[5],9},
         };
-        private void AssertDictionariesSame(PlayerTokenMap a,PlayerTokenMap b){
+        private void AssertDictionariesSame(Dictionary<Guid,int> a,Dictionary<Guid,int> b){
             foreach(var key in a.Keys){
                 if(b.TryGetValue(key,out int value))
                 {

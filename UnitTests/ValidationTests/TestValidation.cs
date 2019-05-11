@@ -14,13 +14,12 @@ namespace UnitTests.ValidationTests
     public class TestValidation
     {
         const string anyStr=".*?";
-        private static readonly Guid key=Guid.NewGuid();
-        private static readonly Guid iv=Guid.NewGuid();
+        public static readonly PlayerTokenMapHandler mapHandler=new PlayerTokenMapHandler(Guid.NewGuid(),Guid.NewGuid());
         private static readonly Guid playerOne=Guid.NewGuid();
         private static readonly Guid playerTwo=Guid.NewGuid();
         [TestMethod]
         public void CatchClientWithGarbageToken(){
-            ClientActionValidator validator=new ClientActionValidator();
+            ClientActionValidator validator=new ClientActionValidator(mapHandler);
             ClientRequestModel model=GetBaseRequestModel();
             model.Action=new ActionDescriptionModel
             {
@@ -30,9 +29,9 @@ namespace UnitTests.ValidationTests
                 TileType=TileType.Red,
                 PatternLineIndex=1
             };
-            model.GameStateHash=model.GameState.GetHashCode()+1;
+            model.GameStateHash=model.GameState.GetHashCode();
             try{
-                validator.ValidateRequest(model,key,iv);
+                validator.ValidateRequest(model);
                 Assert.Fail("expected exception");
             }catch(Exception ex)
             {
@@ -49,7 +48,7 @@ namespace UnitTests.ValidationTests
         }
         [TestMethod]
         public void CatchClientGoesWhenNotItsTurn(){
-            ClientActionValidator validator=new ClientActionValidator();
+            ClientActionValidator validator=new ClientActionValidator(mapHandler);
             ClientRequestModel model=GetBaseRequestModel();
             model.Action=new ActionDescriptionModel
             {
@@ -59,9 +58,9 @@ namespace UnitTests.ValidationTests
                 TileType=TileType.Red,
                 PatternLineIndex=1
             };
-            model.GameStateHash=model.GameState.GetHashCode()+1;
+            model.GameStateHash=model.GameState.GetHashCode();
             try{
-                validator.ValidateRequest(model,key,iv);
+                validator.ValidateRequest(model);
                 Assert.Fail("expected exception");
             }catch(Exception ex)
             {
@@ -78,7 +77,7 @@ namespace UnitTests.ValidationTests
         }
         [TestMethod]
         public void CatchClientServerMismatch(){
-            ClientActionValidator validator=new ClientActionValidator();
+            ClientActionValidator validator=new ClientActionValidator(mapHandler);
             ClientRequestModel model=GetBaseRequestModel();
             model.Action=new ActionDescriptionModel
             {
@@ -90,7 +89,7 @@ namespace UnitTests.ValidationTests
             };
             model.GameStateHash=model.GameState.GetHashCode()+1;
             try{
-                validator.ValidateRequest(model,key,iv);
+                validator.ValidateRequest(model);
                 Assert.Fail("expected exception");
             }catch(Exception ex)
             {
@@ -107,7 +106,7 @@ namespace UnitTests.ValidationTests
         }
         [TestMethod]
         public void CatchClientChoseEmptyFactory(){
-            ClientActionValidator validator=new ClientActionValidator();
+            ClientActionValidator validator=new ClientActionValidator(mapHandler);
             var model=GetBaseRequestModel();
             model.Action=new ActionDescriptionModel
             {
@@ -118,14 +117,15 @@ namespace UnitTests.ValidationTests
                 FromFactory=true
             };
             model.GameStateHash=model.GameState.GetHashCode();
-            var response=validator.ValidateRequest(model,key,iv);
+            var response=validator.ValidateRequest(model);
+            Assert.IsNotNull(response,"expected validation to flag an error");
             Assert.AreEqual(false,response.ErrorOnCenterOfTable,"expected error model to indicate error was not from center of table");
             Assert.AreEqual(2,response.FactoryIndex,"expected error model to indicate which factory");
             AssertExpectedMessage(ClientFacingMessages.NoDrawingFromEmptyFactory(),response.Message);
         }
         [TestMethod]
         public void CatchClientChoseWrongTypeFromFactory(){
-            ClientActionValidator validator=new ClientActionValidator();
+            ClientActionValidator validator=new ClientActionValidator(mapHandler);
             var model=GetBaseRequestModel();
             model.Action=new ActionDescriptionModel
             {
@@ -136,14 +136,15 @@ namespace UnitTests.ValidationTests
                 FromFactory=true
             };
             model.GameStateHash=model.GameState.GetHashCode();
-            var response=validator.ValidateRequest(model,key,iv);
+            var response=validator.ValidateRequest(model);
+            Assert.IsNotNull(response,"expected validation to flag an error");
             Assert.AreEqual(false,response.ErrorOnCenterOfTable,"expected error model to indicate error was not from center of table");
             Assert.AreEqual(1,response.FactoryIndex,"expected error model to indicate which factory");
             AssertExpectedMessage(ClientFacingMessages.InvalidTileTypeForFactory(anyStr),response.Message);
         }
         [TestMethod]
         public void CatchClientChoseWrongTypeFromCenterOfTable(){
-            ClientActionValidator validator=new ClientActionValidator();
+            ClientActionValidator validator=new ClientActionValidator(mapHandler);
             var model=GetBaseRequestModel();
             model.Action=new ActionDescriptionModel
             {
@@ -153,13 +154,14 @@ namespace UnitTests.ValidationTests
                 FromFactory=false
             };
             model.GameStateHash=model.GameState.GetHashCode();
-            var response=validator.ValidateRequest(model,key,iv);
+            var response=validator.ValidateRequest(model);
+            Assert.IsNotNull(response,"expected validation to flag an error");
             Assert.AreEqual(true,response.ErrorOnCenterOfTable,"expected error model to indicate error was from center of table");
             AssertExpectedMessage(ClientFacingMessages.InvalidTileTypeForCenterOfTable(anyStr),response.Message);
         }
         [TestMethod]
         public void CatchClientChoseFromEmptyCenterOfTable(){
-            ClientActionValidator validator=new ClientActionValidator();
+            ClientActionValidator validator=new ClientActionValidator(mapHandler);
             var model=GetBaseRequestModel();
             model.GameState.SharedData.CenterOfTable.Clear();
             model.Action=new ActionDescriptionModel
@@ -170,13 +172,14 @@ namespace UnitTests.ValidationTests
                 FromFactory=false
             };
             model.GameStateHash=model.GameState.GetHashCode();
-            var response=validator.ValidateRequest(model,key,iv);
+            var response=validator.ValidateRequest(model);
+            Assert.IsNotNull(response,"expected validation to flag an error");
             Assert.AreEqual(true,response.ErrorOnCenterOfTable,"expected error model to indicate error was from center of table");
             AssertExpectedMessage(ClientFacingMessages.NoDrawingFromEmptyCenterOfTable(),response.Message);
         }
         [TestMethod]
         public void CatchClientChoseMismatchedPatternLine(){
-            ClientActionValidator validator=new ClientActionValidator();
+            ClientActionValidator validator=new ClientActionValidator(mapHandler);
             var model=GetBaseRequestModel();
             model.GameState.SharedData.CenterOfTable.Clear();
             model.Action=new ActionDescriptionModel
@@ -188,43 +191,23 @@ namespace UnitTests.ValidationTests
                 FromFactory=true
             };
             model.GameStateHash=model.GameState.GetHashCode();
-            var response=validator.ValidateRequest(model,key,iv);
+            var response=validator.ValidateRequest(model);
+            Assert.IsNotNull(response,"expected validation to flag an error");
             Assert.AreEqual(false,response.ErrorOnCenterOfTable,"expected error model to indicate error was not from center of table");
             AssertExpectedMessage(
                 ClientFacingMessages.PatternLineContainsDifferentType(anyStr,anyStr,anyStr),
                 response.Message
             );
         }
-        [TestMethod]
-        public void CatchClientChoseFullPatternLine(){
-            ClientActionValidator validator=new ClientActionValidator();
-            var model=GetBaseRequestModel();
-            model.GameState.SharedData.CenterOfTable.Clear();
-            model.Action=new ActionDescriptionModel
-            {
-                PlayerToken=playerOne,
-                PatternLineIndex=0,
-                FactoryIndex=0,
-                TileType=TileType.Red,
-                FromFactory=true
-            };
-            model.GameStateHash=model.GameState.GetHashCode();
-            var response=validator.ValidateRequest(model,key,iv);
-            Assert.AreEqual(false,response.ErrorOnCenterOfTable,"expected error model to indicate error was not from center of table");
-            AssertExpectedMessage(
-                ClientFacingMessages.PatternLineAlreadyFull(anyStr),
-                response.Message
-            );
-        }
         private ClientRequestModel GetBaseRequestModel(){
-            PlayerTokenMap map=new PlayerTokenMap(key,iv,new Dictionary<Guid, int>{
+            var dict=new Dictionary<Guid, int>{
                 {playerOne,0},
                 {playerTwo,1}
-            });
+            };
             var model=new ClientRequestModel{
 
                 GameState=new GameStateModel{
-                    PlayerTokenMapEnc=map.AsEncryptedJson(),
+                    PlayerTokenMapEnc=mapHandler.EncryptedMap(dict),
                     SharedData=new SharedDataModel{
                         CurrentTurnsPlayersIndex=0,
                         CenterOfTable=new List<TileModel>{
