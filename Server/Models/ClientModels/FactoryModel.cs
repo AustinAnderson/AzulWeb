@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Models.Hashing;
 using Server.Models.Cloning;
 
@@ -6,23 +7,37 @@ namespace Models.Client
 {
     public class FactoryModel
     {
-        public bool IsEmpty=>  TileOne==null&&TileTwo==null&&
-                             TileThree==null&&TileFour==null;
         public TileModel TileOne {get;set;}
         public TileModel TileTwo {get;set;}
         public TileModel TileThree {get;set;}
         public TileModel TileFour {get;set;}
+
+        //use reference class wrapper to allow setting tiles to null;
+        private class TileRef{public TileRef(TileModel m)=>tile=m;public TileModel tile;}
+        private readonly Dictionary<int,(TileRef,string)> indexer;
+        public FactoryModel(){
+            indexer=new Dictionary<int, (TileRef, string)>{
+                {0,(new TileRef(TileOne),nameof(TileOne))},
+                {1,(new TileRef(TileTwo),nameof(TileTwo))},
+                {2,(new TileRef(TileThree),nameof(TileThree))},
+                {3,(new TileRef(TileFour),nameof(TileFour))}
+            };
+        }
+        public bool IsEmpty=>  TileOne==null&&TileTwo==null&&
+                             TileThree==null&&TileFour==null;
         public int IndexLimit = 4;
+        private (TileRef tileRef,string name) GetOrThrow(int ndx){
+            if(ndx<0) throw new ArgumentOutOfRangeException("index must be positive and less than 4");
+            if(indexer.TryGetValue(ndx,out (TileRef,string) val)){
+                return val;
+            }
+            throw new ArgumentOutOfRangeException("there are only 4 tiles in the factory");
+        }
+        public string NameOf(int ndx) => GetOrThrow(ndx).name;
         public TileModel this[int key]{
-            get{
-                if(key<0) throw new ArgumentOutOfRangeException("index must be positive and less than 4");
-                switch(key) {
-                    case 0: return TileOne;
-                    case 1: return TileTwo;
-                    case 2: return TileThree;
-                    case 3: return TileFour;
-                   default: throw new ArgumentOutOfRangeException("there are only 4 patternLines");
-                }
+            get => GetOrThrow(key).tileRef.tile;
+            set{
+                GetOrThrow(key).tileRef.tile=value;
             }
         }
         public override int GetHashCode()
