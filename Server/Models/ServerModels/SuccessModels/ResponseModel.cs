@@ -15,5 +15,6 @@ namespace Models.Server
         public List<TileChangeModel> TileChanges {get;set;}
         public List<WallChangeModel> WallChanges {get;set;}
         public List<ScoreChangeModel> ScoreChanges {get;set;}
+        public int NewTurnsPlayerIndex{get;set;}
     }
 }

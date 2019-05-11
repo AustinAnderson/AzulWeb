@@ -5,6 +5,11 @@ namespace Models.Client
 {
     public class TileModel
     {
+        public TileModel(){}
+        public TileModel(int id,TileType type){
+            Id=id;
+            Type=type;
+        }
         public int Id {get;set;}
         public TileType Type {get;set;}
 
