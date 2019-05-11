@@ -17,7 +17,8 @@ namespace UnitTests.ModelTests
             FactoryModel model=new FactoryModel(){
                 TileTwo=new TileModel(3,TileType.White)
             };
-            Assert.AreEqual(model.TileTwo,model[1],"expected indexing[1] to produce tile two");
+            var actual=model[1];
+            Assert.AreEqual(model.TileTwo,actual,"expected indexing[1] to produce tile two");
         }
         [TestMethod]
         public void FactoryModelCanSetTile(){
