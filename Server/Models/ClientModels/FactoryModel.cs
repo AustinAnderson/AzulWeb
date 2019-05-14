@@ -23,7 +23,6 @@ namespace Models.Client
                 {3,nameof(TileFour)}
             };
 
-        public override int IndexLimit => 4;
         public override int GetHashCode()
         {
             int hash=17;

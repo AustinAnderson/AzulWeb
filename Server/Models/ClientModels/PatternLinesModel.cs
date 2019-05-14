@@ -6,45 +6,34 @@ using Server.Models.ClientModels;
 
 namespace Models.Client
 {
-    public class PatternLine : IEnumerable<TileModel>
+    //for serialization purposes, easier to use straight array and extensions
+    //than custom class
+    public static class PatternLineExtensions
     {
-        private readonly TileModel[] tileList;
-        public PatternLine(int size){
-            tileList=new TileModel[size];
-        }
-        public int Length=>tileList.Length;
-        public TileModel this[int key]{
-            get =>tileList[key];
-            set => tileList[key]=value;
-        }
-        public bool IsEmpty {
-            get{
-                bool empty=true;
-                for(int j=0;j<tileList.Length;j++){
-                    if(tileList[j]!=null) empty=false;
-                }
-                return empty;
+        public static bool IsEmpty(this TileModel[] tileList) {
+            bool empty=true;
+            for(int j=0;j<tileList.Length;j++){
+                if(tileList[j]!=null) empty=false;
             }
+            return empty;
         }
-        public IEnumerator<TileModel> GetEnumerator() => this.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => tileList.GetEnumerator();
     }
-    public class PatternLinesModel:AbstractIndexedModel<PatternLine>
+    public class PatternLinesModel:AbstractIndexedModel<TileModel[]>
     {
         public PatternLinesModel(){
-            LineOne=new PatternLine(1);
-            LineTwo=new PatternLine(2);
-            LineThree=new PatternLine(3);
-            LineFour=new PatternLine(4);
-            LineFive=new PatternLine(5);
+            LineOne=new TileModel[1];
+            LineTwo=new TileModel[2];
+            LineThree=new TileModel[3];
+            LineFour=new TileModel[4];
+            LineFive=new TileModel[5];
         }
 
         //these should fill from left to right, client can display right to left if they want 
-        public PatternLine LineOne {get=>this[0];set=>this[0]=value;}
-        public PatternLine LineTwo {get=>this[1];set=>this[1]=value;}
-        public PatternLine LineThree {get=>this[2];set=>this[2]=value;}
-        public PatternLine LineFour {get=>this[3];set=>this[3]=value;}
-        public PatternLine LineFive {get=>this[4];set=>this[4]=value;}
+        public TileModel[] LineOne {get=>this[0];set=>this[0]=value;}
+        public TileModel[] LineTwo {get=>this[1];set=>this[1]=value;}
+        public TileModel[] LineThree {get=>this[2];set=>this[2]=value;}
+        public TileModel[] LineFour {get=>this[3];set=>this[3]=value;}
+        public TileModel[] LineFive {get=>this[4];set=>this[4]=value;}
         protected override Dictionary<int, string> GetIndexedNames()
             =>new Dictionary<int, string>{
                 {0,nameof(LineOne)},

@@ -41,7 +41,7 @@ namespace Server.Logic.ModelStateChangers
             var playerData=request.GameState.PlayerData[playerIndex];
             var layout=request.GameState.SharedData.Config.WallLayoutToMatch;
             for(int i=0;i<playerData.PatternLines.IndexLimit;i++){
-                if(!playerData.PatternLines[i].IsEmpty)
+                if(!playerData.PatternLines[i].IsEmpty())
                 {
                     var tile=PluckLastTileInLine(playerData.PatternLines,i);
                     WallChangeModel changed=new WallChangeModel

@@ -35,6 +35,7 @@ namespace Server.Logic.ModelStateChangers
                 response.WallTileMoves=wallTiler.MovePatternLineTilesToWalls(request);
             }
             response.NewGameStateHash=request.GameState.GetHashCode();
+            throw new NotImplementedException();
         }
     }
 }
