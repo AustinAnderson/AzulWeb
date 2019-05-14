@@ -30,7 +30,11 @@ namespace Server.Models.ClientModels
             );
         }
         protected abstract Dictionary<int,string> GetIndexedNames();
-        public abstract int IndexLimit {get;}
+        private int indexLimit=-1;
+        public int IndexLimit {get{
+            if(indexLimit==-1){indexLimit=GetIndexedNames().Count;}
+            return indexLimit;
+        }}
         public string NameOf(int ndx)=>GetOrThrow(ndx).Item2;
         public T this[int ndx] {
             get=>GetOrThrow(ndx).Item1.item;

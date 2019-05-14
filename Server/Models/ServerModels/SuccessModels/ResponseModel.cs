@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Server.Models.ServerModels.SuccessModels;
+
 namespace Models.Server
 {
     public class ResponseModel
@@ -12,9 +14,12 @@ namespace Models.Server
         //this way gamestate integrety is validated statelessly
         ////each client is responsible for enacting the same changes client side
         public int NewGameStateHash {get;set;}
-        public List<TileChangeModel> TileChanges {get;set;}
-        public List<WallChangeModel> WallChanges {get;set;}
+        public List<TileChangeModel> FactoryOfferPhaseTileChanges {get;set;}
+        public WallMovePhaseModel WallTileMoves {get;set;}
         public List<ScoreChangeModel> ScoreChanges {get;set;}
+        public List<TileChangeModel> NextRoundSetupChanges {get;set;}
+        bool GameOver{get;set;}
+        public int LeadingPlayerIndex{get;set;}
         public int NewTurnsPlayerIndex{get;set;}
     }
 }

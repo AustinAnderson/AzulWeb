@@ -3,53 +3,50 @@ using System.Collections.Generic;
 using System.Linq;
 using Models.Client;
 using Models.Server;
-using Server.Exceptions;
 
-namespace Server.Logic
+namespace Server.Logic.ModelStateChangers
 {
-    public class ModelChanger
+    public class FactoryOfferPhaseChnager
     {
         private PlayerTokenMapHandler mapHandler;
-        public ModelChanger(PlayerTokenMapHandler mapHandler)
+        public FactoryOfferPhaseChnager(PlayerTokenMapHandler mapHandler)
         {
             this.mapHandler=mapHandler;
         }
         //assumes request model has been validated
-        public ResponseModel ProcessClientChanges(ClientRequestModel request)
+        public List<TileChangeModel> ProcessClientChanges(ClientRequestModel request)
         {
-            ResponseModel response=new ResponseModel();
+            var tileChanges=new List<TileChangeModel>();
             if(request.Action.FromFactory)
             {
-                response=HandleMoveFromFactory(request);
+                tileChanges=HandleMoveFromFactory(request);
             }
             else
             {
-                response=HandleMoveFromCenterTable(request);
+                tileChanges=HandleMoveFromCenterTable(request);
             }
-            response.NewGameStateHash=request.GameState.GetHashCode();
-            return response;
+            return tileChanges;
         }
-        private ResponseModel HandleMoveFromFactory(ClientRequestModel request)
+        private List<TileChangeModel> HandleMoveFromFactory(ClientRequestModel request)
         {
             int factoryIndex=request.Action.FactoryIndex;
             int patternLineIndex=request.Action.PatternLineIndex;
             int playerIndex=request.GameState.SharedData.CurrentTurnsPlayersIndex;
             var patternLines=request.GameState.PlayerData[playerIndex].PatternLines;
             var chosenFactory=request.GameState.SharedData.Factories[factoryIndex];
-            ResponseModel response=new ResponseModel();
-            response.TileChanges=new List<TileChangeModel>();
+            var tileChanges=new List<TileChangeModel>();
             for(int i=0;i<chosenFactory.IndexLimit;i++){//foreach tile in the factory
                 if(chosenFactory[i]!=null){//if its not an empty factory
                 //move the ones requested to the requested patternline/penalty/bag
                 //and the others to the center
                     if(request.Action.TileType==chosenFactory[i].Type){
-                        response.TileChanges.Add(CopyTileToPlayerBoardOrBag(
+                        tileChanges.Add(CopyTileToPlayerBoardOrBag(
                             request.GameState,playerIndex,patternLineIndex,chosenFactory[i]
                         ));
                     }
                     else
                     {
-                        response.TileChanges.Add(
+                        tileChanges.Add(
                             CopyNonChosenTileToCenterOfTable(
                                 request.GameState.SharedData.CenterOfTable,
                                 chosenFactory[i]
@@ -59,12 +56,12 @@ namespace Server.Logic
                     chosenFactory[i]=null;
                 }
             }
-            return response;
+            return tileChanges;
         }
-        private ResponseModel HandleMoveFromCenterTable(ClientRequestModel request)
+        private List<TileChangeModel> HandleMoveFromCenterTable(ClientRequestModel request)
         {
-            ResponseModel response=new ResponseModel();
-            response.TileChanges=new List<TileChangeModel>();
+            var tileChanges=new List<TileChangeModel>();
+            tileChanges=new List<TileChangeModel>();
             int patternLineIndex=request.Action.PatternLineIndex;
             int playerIndex=request.GameState.SharedData.CurrentTurnsPlayersIndex;
             var patternLines=request.GameState.PlayerData[playerIndex].PatternLines;
@@ -73,7 +70,7 @@ namespace Server.Logic
             TileModel firstPlayerToken=centerOfTable.FirstOrDefault(t=>t.Type==TileType.FirstPlayerMarker);
             if(firstPlayerToken!=null)
             {
-                response.TileChanges.Add(CopyTileToPlayerPenaltyOrBag(
+                tileChanges.Add(CopyTileToPlayerPenaltyOrBag(
                     request.GameState,playerIndex,firstPlayerToken
                 ));
                 centerOfTable.Remove(firstPlayerToken);
@@ -83,13 +80,13 @@ namespace Server.Logic
             {
                 var tile = centerOfTable[i];
                 if(tile.Type==request.Action.TileType){
-                    response.TileChanges.Add(CopyTileToPlayerBoardOrBag(
+                    tileChanges.Add(CopyTileToPlayerBoardOrBag(
                         request.GameState,playerIndex,patternLineIndex,tile
                     ));
                     centerOfTable.Remove(tile);
                 }
             }
-            return response;
+            return tileChanges;
         }
         private TileChangeModel CopyNonChosenTileToCenterOfTable(List<TileModel> centerOfTable, TileModel tileModel)
         {
@@ -157,21 +154,6 @@ namespace Server.Logic
                 change=CopyTileToPlayerPenaltyOrBag(state,playerIndex,tile);
             }
             return change;
-        }
-
-        
-        private bool ActionFinishesRound(SharedDataModel shared)
-        {
-            bool roundDone=shared.CenterOfTable.Count==0;
-            for(int i=0;roundDone&&i<shared.Factories.Length;i++)
-            {
-                if(!shared.Factories[i].IsEmpty) roundDone=false;
-            }
-            return roundDone;
-        }
-        private void HandleNextRound(ClientRequestModel request)
-        {
-            throw new NotImplementedException();
         }
     }
 }
