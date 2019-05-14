@@ -5,7 +5,7 @@ using Server.Models.Cloning;
 
 namespace Models.Client
 {
-    public class PlayerDataModel
+    public class PlayerDataModel:IDeepCopyable<PlayerDataModel>
     {
         public int Score {get;set;}=0;
         public PatternLinesModel PatternLines {get;set;} =new PatternLinesModel();
@@ -23,6 +23,12 @@ namespace Models.Client
             ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashListOfList(Wall));
             return hash;
         }
+        public PlayerDataModel DeepCopy()=>new PlayerDataModel{
+            Score=this.Score,
+            PatternLines=this.PatternLines?.DeepCopy(),
+            Wall=DeepCopyObj<TileModel>.ArrayOfArray(this.Wall),
+            FloorLine=DeepCopyObj<TileModel>.Array(this.FloorLine)
+        };
     }
 
 }

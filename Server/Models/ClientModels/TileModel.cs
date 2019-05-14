@@ -3,7 +3,7 @@ using Server.Models.Cloning;
 
 namespace Models.Client
 {
-    public class TileModel
+    public class TileModel:IDeepCopyable<TileModel>
     {
         public TileModel(){}
         public TileModel(int id,TileType type){
@@ -12,6 +12,8 @@ namespace Models.Client
         }
         public int Id {get;set;}
         public TileType Type {get;set;}
+
+        public TileModel DeepCopy() => new TileModel(Id,Type);
 
         public override bool Equals(object obj)
         {

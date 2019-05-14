@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Models.Hashing;
 using Server.Models.ClientModels;
+using Server.Models.Cloning;
 
 namespace Models.Client
 {
@@ -18,7 +19,7 @@ namespace Models.Client
             return empty;
         }
     }
-    public class PatternLinesModel:AbstractIndexedModel<TileModel[]>
+    public class PatternLinesModel:AbstractIndexedModel<TileModel[]>,IDeepCopyable<PatternLinesModel>
     {
         public PatternLinesModel(){
             LineOne=new TileModel[1];
@@ -54,6 +55,13 @@ namespace Models.Client
             return hash;
         }
 
+        public PatternLinesModel DeepCopy() => new PatternLinesModel{
+            LineOne=DeepCopyObj<TileModel>.Array(this.LineOne),
+            LineTwo=DeepCopyObj<TileModel>.Array(this.LineTwo),
+            LineThree=DeepCopyObj<TileModel>.Array(this.LineThree),
+            LineFour=DeepCopyObj<TileModel>.Array(this.LineFour),
+            LineFive=DeepCopyObj<TileModel>.Array(this.LineFive)
+        };
     }
 }
 

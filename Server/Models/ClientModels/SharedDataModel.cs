@@ -5,7 +5,7 @@ using Server.Models.Cloning;
 
 namespace Models.Client
 {
-    public class SharedDataModel
+    public class SharedDataModel:IDeepCopyable<SharedDataModel>
     {
         public ConfigModel Config {get;set;}
         public List<TileModel> DiscardPile {get;set;}
@@ -13,6 +13,7 @@ namespace Models.Client
         public List<TileModel> Bag {get;set;}
         public FactoryModel[] Factories {get;set;}
         public int CurrentTurnsPlayersIndex{get;set;}
+
 
         public override int GetHashCode()
         {
@@ -25,5 +26,15 @@ namespace Models.Client
             ModelHashUtils.CombineHash(ref hash,CurrentTurnsPlayersIndex);
             return hash;
         }
+
+        public SharedDataModel DeepCopy()=> new SharedDataModel
+        {
+            CurrentTurnsPlayersIndex=this.CurrentTurnsPlayersIndex,
+            Config=this.Config?.DeepCopy(),
+            DiscardPile=DeepCopyObj<TileModel>.List(this.DiscardPile),
+            CenterOfTable=DeepCopyObj<TileModel>.List(this.CenterOfTable),
+            Bag=DeepCopyObj<TileModel>.List(this.Bag),
+            Factories=DeepCopyObj<FactoryModel>.Array(this.Factories)
+        };
     }
 }

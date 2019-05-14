@@ -6,7 +6,7 @@ using Server.Models.Cloning;
 
 namespace Models.Client
 {
-    public class FactoryModel:AbstractIndexedModel<TileModel>
+    public class FactoryModel:AbstractIndexedModel<TileModel>,IDeepCopyable<FactoryModel>
     {
         public TileModel TileOne {get=>this[0];set=>this[0]=value;}
         public TileModel TileTwo {get=>this[1];set=>this[1]=value;}
@@ -33,6 +33,12 @@ namespace Models.Client
             return hash;
         }
 
+        public FactoryModel DeepCopy()=>new FactoryModel{
+            TileOne=this.TileOne?.DeepCopy(),
+            TileTwo=this.TileTwo?.DeepCopy(),
+            TileThree=this.TileThree?.DeepCopy(),
+            TileFour=this.TileFour?.DeepCopy()
+        };
     }
 }
 

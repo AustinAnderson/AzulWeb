@@ -5,7 +5,7 @@ using Server.Models.Cloning;
 
 namespace Models.Client
 {
-    public class GameStateModel
+    public class GameStateModel:IDeepCopyable<GameStateModel>
     {
         public string PlayerTokenMapEnc {get;set;}
         public SharedDataModel SharedData {get;set;}
@@ -19,5 +19,11 @@ namespace Models.Client
             ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(PlayerData));
             return hash;
         }
+
+        public GameStateModel DeepCopy()=>new GameStateModel{
+            PlayerTokenMapEnc=this.PlayerTokenMapEnc,
+            SharedData=this.SharedData?.DeepCopy(),
+            PlayerData=DeepCopyObj<PlayerDataModel>.List(this.PlayerData)
+        };
     }
 }
