@@ -51,9 +51,10 @@ namespace Server.Models.Cloning
             if(toDeepCopy==null) return null;
             T[] copy=new T[toDeepCopy.Length];
             for(int i=0;i<toDeepCopy.Length;i++){
-                T val = default(T);
-                if()
-                copy[i]=toDeepCopy[i].DeepCopy();
+                copy[i] = default(T);
+                if(toDeepCopy[i]!=null&&!toDeepCopy[i].Equals(default(T))){
+                    copy[i]=toDeepCopy[i].DeepCopy();
+                }
             }
             return copy;
         }
