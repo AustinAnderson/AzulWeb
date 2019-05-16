@@ -92,7 +92,7 @@ namespace Server.Logic.ModelStateChangers
         {
             centerOfTable.Add(tileModel);
             return new TileChangeModel{
-                JsonPath=nameof(GameStateModel.SharedData)+"."+
+                NewJsonPath=nameof(GameStateModel.SharedData)+"."+
                          nameof(GameStateModel.SharedData.CenterOfTable),
                 TileId=tileModel.Id
             };
@@ -121,7 +121,7 @@ namespace Server.Logic.ModelStateChangers
                 state.SharedData.Bag.Add(tile);
             }
             return new TileChangeModel{
-                JsonPath=destJPath,
+                NewJsonPath=destJPath,
                 TileId=tile.Id
             };
         }
@@ -132,7 +132,7 @@ namespace Server.Logic.ModelStateChangers
         {
             TileChangeModel change=new TileChangeModel{
                 TileId=tile.Id,
-                JsonPath=nameof(state.PlayerData)+$"[{playerIndex}]"
+                NewJsonPath=nameof(state.PlayerData)+$"[{playerIndex}]"
             };
             var playerData=state.PlayerData[playerIndex];
             var line=playerData.PatternLines[patternLineIndex];
@@ -141,7 +141,7 @@ namespace Server.Logic.ModelStateChangers
             for(int i=0;i<line.Length;i++){
                 if(line[i]==null)
                 {
-                    change.JsonPath+="."+nameof(playerData.PatternLines)+
+                    change.NewJsonPath+="."+nameof(playerData.PatternLines)+
                               $".{playerData.PatternLines.NameOf(patternLineIndex)}[{i}]";
                     line[i]=tile;
                     penalty=false;

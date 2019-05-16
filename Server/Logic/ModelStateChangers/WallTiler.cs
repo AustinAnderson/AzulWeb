@@ -28,7 +28,7 @@ namespace Server.Logic.ModelStateChangers
                 for(int j=0;j<playerData.PatternLines[i].Length;j++){
                     if(playerData.PatternLines[i][j]!=null){
                         changes.Add(new TileChangeModel{
-                            JsonPath=nameof(GameStateModel.SharedData)+"."+nameof(SharedDataModel.DiscardPile),
+                            NewJsonPath=nameof(GameStateModel.SharedData)+"."+nameof(SharedDataModel.DiscardPile),
                             TileId=playerData.PatternLines[i][j].Id
                         });
                         request.GameState.SharedData.DiscardPile.Add(playerData.PatternLines[i][j]);
