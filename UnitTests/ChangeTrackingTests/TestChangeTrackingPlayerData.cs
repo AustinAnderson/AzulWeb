@@ -44,6 +44,40 @@ namespace UnitTests.ChangeTrackingTests
                 patternChange.NewJsonPath
             );
         }
+        [TestMethod]
+        public void FromPatternLinesToWall(){
+            TestSetupUtils.FailIfOtherTestsDoesntPass(
+                "can't arange test if can't copy",new ModelTests.TestModelCopy().TestCopyGameState
+            );
+            var beforeState=TestSetupUtils.GetSampleGameStateModel();
+            var afterState=beforeState.DeepCopy();
+            afterState.PlayerData[0].Wall[1][0] = afterState.PlayerData[0].PatternLines[1][0];
+            afterState.PlayerData[0].PatternLines[1][0] = null;
+            afterState.PlayerData[0].Wall[4][0] = afterState.PlayerData[0].PatternLines[4][2];
+            afterState.PlayerData[0].PatternLines[4][2] = null;
+            var tracker=new ChangeTracker();
+            var result=tracker.FindChanges(beforeState,afterState);
+            Assert.AreEqual(2,result.WallChanges.Count,"expected two wall changes" );
+            int patternLine1TileId=beforeState.PlayerData[0].PatternLines[1][0].Id;
+            var patternLine1WallChange=result.WallChanges.FirstOrDefault(x=>
+                x.TileId==patternLine1TileId
+            );
+            if(patternLine1WallChange==null) Assert.Fail($"expected id {patternLine1TileId} to be one in the change list");
+            Assert.AreEqual( 1,patternLine1WallChange.RowIndex,"tile 1 row ndx" );
+            Assert.AreEqual( 0,patternLine1WallChange.ColIndex,"tile 1 col ndx" );
+            Assert.AreEqual( 0,patternLine1WallChange.PlayerIndex,"tile 1 player ndx" );
+            Assert.AreEqual( patternLine1TileId,patternLine1WallChange.TileId,"tile 1 tileId" );
+
+            int patternLine5TileId=beforeState.PlayerData[0].PatternLines[4][2].Id;
+            var patternLine5WallChange=result.WallChanges.FirstOrDefault(x=>
+                x.TileId==patternLine5TileId
+            );
+            if(patternLine5WallChange==null) Assert.Fail($"expected id {patternLine5TileId} to be one in the change list");
+            Assert.AreEqual( 4,patternLine5WallChange.RowIndex,"tile 2 row ndx" );
+            Assert.AreEqual( 0,patternLine5WallChange.ColIndex,"tile 2 col ndx" );
+            Assert.AreEqual( 0,patternLine5WallChange.PlayerIndex,"tile 2 player ndx" );
+            Assert.AreEqual( patternLine5TileId,patternLine5WallChange.TileId,"tile 2 tileId" );
+        }
     }
 }
 
