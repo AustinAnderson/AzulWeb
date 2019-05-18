@@ -59,7 +59,7 @@ namespace UnitTests.ModelTests
         [TestMethod]
         public void PatternLinesModelConstructorInitializesLengths(){
             PatternLinesModel plns=new PatternLinesModel();
-            Assert.AreEqual(4,plns[3].Length,"expected line 4 for be of length 4");
+            Assert.AreEqual(4,plns[3].Count,"expected line 4 for be of length 4");
         }
     }
 }

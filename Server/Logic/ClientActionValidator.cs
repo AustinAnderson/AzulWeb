@@ -80,7 +80,7 @@ namespace Server.Logic
             ActionValidationFailedModel error=null;
             var patternLines=data.PlayerData[data.SharedData.CurrentTurnsPlayersIndex].PatternLines;
             var patternLine=patternLines[action.PatternLineIndex];
-            for(int i=0;i<patternLine.Length;i++){
+            for(int i=0;i<patternLine.Count;i++){
                 if(patternLine[i]!=null&& patternLine[i].Type!=action.TileType)
                 {
                     error=new ActionValidationFailedModel{

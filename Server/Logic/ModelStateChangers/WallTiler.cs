@@ -25,15 +25,14 @@ namespace Server.Logic.ModelStateChangers
         {
             var playerData=request.GameState.PlayerData[playerIndex];
             for(int i=0;i<playerData.PatternLines.IndexLimit;i++){
-                for(int j=0;j<playerData.PatternLines[i].Length;j++){
-                    if(playerData.PatternLines[i][j]!=null){
-                        changes.Add(new TileChangeModel{
-                            NewJsonPath=nameof(GameStateModel.SharedData)+"."+nameof(SharedDataModel.DiscardPile),
-                            TileId=playerData.PatternLines[i][j].Id
-                        });
-                        request.GameState.SharedData.DiscardPile.Add(playerData.PatternLines[i][j]);
-                        playerData.PatternLines[i][j]=null;
-                    }
+                while(!playerData.PatternLines[i].IsEmpty)
+                {
+                    var popped=playerData.PatternLines[i].PopOrNull();
+                    changes.Add(new TileChangeModel{
+                        NewJsonPath=nameof(GameStateModel.SharedData)+"."+nameof(SharedDataModel.DiscardPile),
+                        TileId=popped.Id
+                    });
+                    request.GameState.SharedData.DiscardPile.Add(popped);
                 }
             }
         }
@@ -41,39 +40,20 @@ namespace Server.Logic.ModelStateChangers
             var playerData=request.GameState.PlayerData[playerIndex];
             var layout=request.GameState.SharedData.Config.WallLayoutToMatch;
             for(int i=0;i<playerData.PatternLines.IndexLimit;i++){
-                if(!playerData.PatternLines[i].IsEmpty())
+                if(!playerData.PatternLines[i].IsEmpty)
                 {
-                    var tile=PluckLastTileInLine(playerData.PatternLines,i);
-                    WallChangeModel changed=new WallChangeModel
+                    var tile=playerData.PatternLines[i].PopOrNull();
+                    for(int colNdx=0;colNdx<layout[i].Length;colNdx++)
                     {
-                        PlayerIndex=playerIndex,
-                        ColIndex=0,
-                        RowIndex=i,
-                        TileId=tile.Id
-                    };
-                    for(;changed.ColIndex<layout[i].Length;changed.ColIndex++)
-                    {
-                        if(layout[i][changed.ColIndex]==tile.Type) break;
+                        if(layout[i][colNdx]==tile.Type)
+                        {
+                            //assumes player data wall will match layout
+                            playerData.Wall[i][colNdx]=tile;
+                            break;
+                        } 
                     }
-                    //assumes player data wall will match layout
-                    playerData.Wall[i][changed.ColIndex]=tile;
-                    toAddTo.Add(changed);
                 }
             }
-        }
-        private TileModel PluckLastTileInLine(PatternLinesModel model, int lineIndex)
-        {
-            var line=model[lineIndex];
-            TileModel tile=null;
-            for(int i=0;i<line.Length;i++){
-                tile=line[i];
-                if(i==line.Length-1||line[i+1]==null)
-                {
-                    line[i]=null;
-                    break;
-                }
-            }
-            return tile;
         }
     }
 }

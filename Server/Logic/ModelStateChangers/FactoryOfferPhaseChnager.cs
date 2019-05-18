@@ -65,15 +65,14 @@ namespace Server.Logic.ModelStateChangers
             int patternLineIndex=request.Action.PatternLineIndex;
             int playerIndex=request.GameState.SharedData.CurrentTurnsPlayersIndex;
             var patternLines=request.GameState.PlayerData[playerIndex].PatternLines;
+            var floorLine=request.GameState.PlayerData[playerIndex].FloorLine;
             var centerOfTable=request.GameState.SharedData.CenterOfTable;
             //if no one's drawn from the first player spot, we need to add it to this player's penalties
             TileModel firstPlayerToken=centerOfTable.FirstOrDefault(t=>t.Type==TileType.FirstPlayerMarker);
             if(firstPlayerToken!=null)
             {
-                tileChanges.Add(CopyTileToPlayerPenaltyOrBag(
-                    request.GameState,playerIndex,firstPlayerToken
-                ));
                 centerOfTable.Remove(firstPlayerToken);
+                for(int i=0;i<)
             }
             //move chosen tiles to the chosen pattern line
             HashSet<TileModel> newCenterOfTable=new HashSet<TileModel>();
@@ -82,12 +81,6 @@ namespace Server.Logic.ModelStateChangers
                 if(tile.Type!=request.Action.TileType)
                 {
                     newCenterOfTable.Add(tile);
-                }
-                else
-                {
-                    tileChanges.Add(CopyTileToPlayerBoardOrBag(
-                        request.GameState,playerIndex,patternLineIndex,tile
-                    ));
                 }
             }
             centerOfTable=newCenterOfTable;
