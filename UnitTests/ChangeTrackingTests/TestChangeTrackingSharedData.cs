@@ -11,6 +11,32 @@ namespace UnitTests.ChangeTrackingTests
     public class TestChangeTrackingSharedData
     {
         [TestMethod]
+        public void ReshuffleBagTracked()
+        {
+            TestSetupUtils.FailIfOtherTestsDoesntPass(
+                "can't arange test if can't copy",new ModelTests.TestModelCopy().TestCopyGameState
+            );
+            var beforeState=TestSetupUtils.GetSampleGameStateModel();
+            var afterState=beforeState.DeepCopy();
+            TileModel tile = afterState.SharedData.DiscardPile[0];
+            afterState.SharedData.DiscardPile.Remove(tile);
+            afterState.SharedData.Bag.Add(tile);
+
+            var tracker=new ChangeTracker();
+            var result=tracker.FindChanges(beforeState,afterState);
+
+
+            Assert.AreEqual(1,result.TileChanges.Count,"expected one tile list changes");
+            var backToBagChange=result.TileChanges.FirstOrDefault(x=>
+                x.TileId==tile.Id
+            );
+            if(backToBagChange==null) Assert.Fail($"expected id {tile.Id} to be one in the change list");
+            Assert.AreEqual(
+                $"{nameof(GameStateModel.SharedData)}.{nameof(SharedDataModel.Bag)}",
+                backToBagChange.NewJsonPath
+            );
+        }
+        [TestMethod]
         public void DiscardFromPatternLineTracked()
         {
             TestSetupUtils.FailIfOtherTestsDoesntPass(
