@@ -21,6 +21,15 @@ namespace Server.Models.Cloning
             }
             return copy;
         }
+        public static S Set<S>(S toDeepCopy) where S:ISet<T>,new(){
+            if(toDeepCopy==null||toDeepCopy.Equals(default(S))) return default(S);
+            S newSet=new S();
+            foreach(var copyAble in toDeepCopy)
+            {
+                newSet.Add(copyAble);
+            }
+            return newSet;
+        }
         public static L List<L>(L toDeepCopy) where L:IList<T>,new()
         {
             if(toDeepCopy==null||toDeepCopy.Equals(default(L))) return default(L);
@@ -66,6 +75,17 @@ namespace Server.Models.Cloning
                 mat[i]=DeepCopyObj<T>.Array(toDeepCopy[i]);
             }
             return mat;
+        }
+        public static S Set<S>(S toDeepCopy) where S:ISet<T>,new(){
+            if(toDeepCopy==null||toDeepCopy.Equals(default(S))) return default(S);
+            S newSet=new S();
+            foreach(var copyAble in toDeepCopy)
+            {
+                T val=default(T);
+                if(copyAble!=null&&!copyAble.Equals(default(T))) val=copyAble.DeepCopy();
+                newSet.Add(val);
+            }
+            return newSet;
         }
         public static L List<L>(L toDeepCopy) where L:IList<T>,new()
         {

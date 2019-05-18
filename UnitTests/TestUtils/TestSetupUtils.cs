@@ -22,9 +22,9 @@ namespace UnitTests.TestUtils
                 PlayerTokenMapEnc="some string",
                 SharedData=new SharedDataModel{
                     CurrentTurnsPlayersIndex=3,
-                    DiscardPile=new List<TileModel>{new TileModel(i++,TileType.Blue)},
-                    Bag=new List<TileModel>{new TileModel(i++,TileType.Red)},
-                    CenterOfTable=new List<TileModel>{new TileModel(i++,TileType.Red),new TileModel(i++,TileType.FirstPlayerMarker)},
+                    DiscardPile=new HashSet<TileModel>{new TileModel(i++,TileType.Blue)},
+                    Bag=new HashSet<TileModel>{new TileModel(i++,TileType.Red)},
+                    CenterOfTable=new HashSet<TileModel>{new TileModel(i++,TileType.Red),new TileModel(i++,TileType.FirstPlayerMarker)},
                     Factories=new FactoryModel[]{
                         new FactoryModel{
                             TileOne=new TileModel(i++,TileType.White),TileThree=new TileModel(i++,TileType.Red)

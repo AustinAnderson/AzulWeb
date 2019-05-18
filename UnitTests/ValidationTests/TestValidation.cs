@@ -210,7 +210,7 @@ namespace UnitTests.ValidationTests
                     PlayerTokenMapEnc=mapHandler.EncryptedMap(dict),
                     SharedData=new SharedDataModel{
                         CurrentTurnsPlayersIndex=0,
-                        CenterOfTable=new List<TileModel>{
+                        CenterOfTable=new HashSet<TileModel>{
                             {new TileModel{Id=1,Type=TileType.Black}}
                         },
                         Factories=new FactoryModel[]{
@@ -225,7 +225,7 @@ namespace UnitTests.ValidationTests
                             new FactoryModel(),
                             new FactoryModel(),
                         },
-                        Bag=new List<TileModel>{new TileModel{Id=1,}}
+                        Bag=new HashSet<TileModel>{new TileModel{Id=1,}}
                     },
                     PlayerData=new List<PlayerDataModel>{
                         new PlayerDataModel(),

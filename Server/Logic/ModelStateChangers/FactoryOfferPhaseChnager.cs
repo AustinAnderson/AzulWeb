@@ -76,19 +76,24 @@ namespace Server.Logic.ModelStateChangers
                 centerOfTable.Remove(firstPlayerToken);
             }
             //move chosen tiles to the chosen pattern line
-            for(int i=centerOfTable.Count-1;i>0;i--)
+            HashSet<TileModel> newCenterOfTable=new HashSet<TileModel>();
+            foreach(var tile in centerOfTable)
             {
-                var tile = centerOfTable[i];
-                if(tile.Type==request.Action.TileType){
+                if(tile.Type!=request.Action.TileType)
+                {
+                    newCenterOfTable.Add(tile);
+                }
+                else
+                {
                     tileChanges.Add(CopyTileToPlayerBoardOrBag(
                         request.GameState,playerIndex,patternLineIndex,tile
                     ));
-                    centerOfTable.Remove(tile);
                 }
             }
+            centerOfTable=newCenterOfTable;
             return tileChanges;
         }
-        private TileChangeModel CopyNonChosenTileToCenterOfTable(List<TileModel> centerOfTable, TileModel tileModel)
+        private TileChangeModel CopyNonChosenTileToCenterOfTable(HashSet<TileModel> centerOfTable, TileModel tileModel)
         {
             centerOfTable.Add(tileModel);
             return new TileChangeModel{

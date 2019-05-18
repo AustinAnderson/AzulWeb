@@ -47,11 +47,11 @@ namespace Models.Client
         public override int GetHashCode()
         {
             int hash=17;
-            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(LineOne));
-            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(LineTwo));
-            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(LineThree));
-            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(LineFour));
-            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(LineFive));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashOfEnumerable(LineOne));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashOfEnumerable(LineTwo));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashOfEnumerable(LineThree));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashOfEnumerable(LineFour));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashOfEnumerable(LineFive));
             return hash;
         }
 

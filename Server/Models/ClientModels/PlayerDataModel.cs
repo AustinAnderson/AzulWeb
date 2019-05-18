@@ -19,8 +19,8 @@ namespace Models.Client
             int hash=17;
             ModelHashUtils.CombineHash(ref hash,Score);
             ModelHashUtils.CombineHash(ref hash,PatternLines.GetHashCode());
-            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(FloorLine));
-            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashListOfList(Wall));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashOfEnumerable(FloorLine));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashOfEnumerableOfEnumerable(Wall));
             return hash;
         }
         public PlayerDataModel DeepCopy()=>new PlayerDataModel{

@@ -10,7 +10,19 @@ namespace Models.Hashing
                 hash=hash*31+hash2.Value;
             }
         }
-        public static int HashBoolList(IEnumerable<bool> toHash)
+        public static int HashOfSet<THashable>(ISet<THashable> toHash){
+            int hash=17;
+            int multFactor=-1640531527;
+            if(toHash!=null)
+            unchecked{
+                hash=19;//hash different for null vs empty
+                foreach(var hashable in toHash){
+                    hash+=(hashable?.GetHashCode()??0)*multFactor;
+                }
+            }
+            return hash;
+        }
+        public static int HashOfEnumerable(IEnumerable<bool> toHash)
         {
             int hash=0;
             if(toHash!=null)
@@ -23,11 +35,12 @@ namespace Models.Hashing
             }
             return hash;
         }
-        public static int HashList<THashable>(IEnumerable<THashable> toHash) 
+        public static int HashOfEnumerable<THashable>(IEnumerable<THashable> toHash) 
         {
             int hash = 17;
             if(toHash!=null)
             unchecked{
+                hash=19;//hash different for null vs empty
                 var enumerator=toHash.GetEnumerator();
                 while(enumerator.MoveNext())
                 {
@@ -37,16 +50,17 @@ namespace Models.Hashing
             }
             return hash;
         }
-        public static int HashListOfList<THashable>(IEnumerable<IEnumerable<THashable>> toHash)
+        public static int HashOfEnumerableOfEnumerable<THashable>(IEnumerable<IEnumerable<THashable>> toHash)
         {
             int hash = 17;
             if(toHash!=null)
             unchecked{
+                hash=19;//hash different for null vs empty
                 var enumerator=toHash.GetEnumerator();
                 while(enumerator.MoveNext())
                 {
                     if(enumerator.Current!=null)
-                    hash=hash*31+HashList(enumerator.Current);
+                    hash=hash*31+HashOfEnumerable(enumerator.Current);
                 }
             }
             return hash;

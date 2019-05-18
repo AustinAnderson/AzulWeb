@@ -16,7 +16,7 @@ namespace Models.Client
             int hash = 17;
             ModelHashUtils.CombineHash(ref hash,PlayerTokenMapEnc?.GetHashCode());
             ModelHashUtils.CombineHash(ref hash,SharedData?.GetHashCode());
-            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(PlayerData));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashOfEnumerable(PlayerData));
             return hash;
         }
 

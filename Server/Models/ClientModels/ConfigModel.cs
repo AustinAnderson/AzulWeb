@@ -12,8 +12,8 @@ namespace Models.Client
 
         public override int GetHashCode(){
             int hash=17;
-            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashList(FloorPenalties));
-            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashListOfList(WallLayoutToMatch));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashOfEnumerable(FloorPenalties));
+            ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashOfEnumerableOfEnumerable(WallLayoutToMatch));
             return hash;
         }
         public ConfigModel DeepCopy()=> new ConfigModel{

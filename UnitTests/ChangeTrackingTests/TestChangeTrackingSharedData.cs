@@ -18,7 +18,7 @@ namespace UnitTests.ChangeTrackingTests
             );
             var beforeState=TestSetupUtils.GetSampleGameStateModel();
             var afterState=beforeState.DeepCopy();
-            TileModel tile = afterState.SharedData.DiscardPile[0];
+            TileModel tile = afterState.SharedData.DiscardPile.First();
             afterState.SharedData.DiscardPile.Remove(tile);
             afterState.SharedData.Bag.Add(tile);
 

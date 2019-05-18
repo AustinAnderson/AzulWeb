@@ -99,15 +99,15 @@ namespace Server.Logic.ChangeTracking
                     before.SharedData.Factories[i],after.SharedData.Factories[i]
                 );
             }
-            FillListChanges(
+            FillSetChanges(
                 changes,$"{nameof(GameStateModel.SharedData)}.{nameof(SharedDataModel.Bag)}",
                 before.SharedData.Bag,after.SharedData.Bag
             );
-            FillListChanges(
+            FillSetChanges(
                 changes,$"{nameof(GameStateModel.SharedData)}.{nameof(SharedDataModel.CenterOfTable)}",
                 before.SharedData.CenterOfTable,after.SharedData.CenterOfTable
             );
-            FillListChanges(
+            FillSetChanges(
                 changes,$"{nameof(GameStateModel.SharedData)}.{nameof(SharedDataModel.DiscardPile)}",
                 before.SharedData.DiscardPile,after.SharedData.DiscardPile
             );
@@ -144,15 +144,15 @@ namespace Server.Logic.ChangeTracking
                 }
             }
         }
-        private void FillListChanges(
-            GameStateChangesModel changes, string basePath, List<TileModel> before, List<TileModel> after
+        private void FillSetChanges(
+            GameStateChangesModel changes, string basePath, ISet<TileModel> before, ISet<TileModel> after
         )
         {
             //foreach tile in after, if before doesn't have it add it to change list
-            for(int i=0;i<after.Count;i++){
+            foreach(var afterTile in after){
                 bool matchingTileFound=false;
-                for(int j=i;j<before.Count;j++){
-                    if(after[i].Id==before[j].Id) {
+                foreach(var beforeTile in before){
+                    if(afterTile.Id==beforeTile.Id){
                         matchingTileFound=true;
                         break;
                     }
@@ -160,12 +160,11 @@ namespace Server.Logic.ChangeTracking
                 if(!matchingTileFound){
                     changes.TileChanges.Add(new TileChangeModel{
                         NewJsonPath=basePath,
-                        TileId=after[i].Id
+                        TileId=afterTile.Id
                     });
                 }
             }
         }
-
     }
 }
 
