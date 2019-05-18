@@ -12,6 +12,8 @@ namespace Models.Client
         private int currentIndex;
         private TileModel[] tileList;
         public int Count => tileList.Length;
+        public bool IsEmpty => tileList[0]==null;
+        public bool IsFull =>  tileList[tileList.Length-1] != null;
 
         public FixedLengthTileModelQueue(int length)
         {
@@ -19,7 +21,6 @@ namespace Models.Client
             currentIndex=0;
         }
         public TileModel this[int ndx]{ get=>tileList[ndx]; }
-        public bool IsEmpty => tileList[0]==null;
 
         public TileModel PopOrNull(){
             TileModel popped=null;

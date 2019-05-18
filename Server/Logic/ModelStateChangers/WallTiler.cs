@@ -11,28 +11,24 @@ namespace Server.Logic.ModelStateChangers
         public void MovePatternLineTilesToWalls(ClientRequestModel request)
         {
             for(int i=0;i<request.GameState.PlayerData.Count;i++){
-                AddPlayersChanges(request,i);
-                AddDiscardRemainingPatternLineTiles(request,i);
+                MoveFullPatternLinesToWall(request,i);
             }
         }
-        private void AddDiscardRemainingPatternLineTiles(
-            ClientRequestModel request,int playerIndex
+        private void DiscardRemainingPatternLineTiles(
+            ClientRequestModel request,FixedLengthTileModelQueue patternLine 
         )
         {
-            var playerData=request.GameState.PlayerData[playerIndex];
-            for(int i=0;i<playerData.PatternLines.IndexLimit;i++){
-                while(!playerData.PatternLines[i].IsEmpty)
-                {
-                    var popped=playerData.PatternLines[i].PopOrNull();
-                    if(popped!=null) request.GameState.SharedData.DiscardPile.Add(popped);
-                }
+            while(!patternLine.IsEmpty)
+            {
+                var popped=patternLine.PopOrNull();
+                if(popped!=null) request.GameState.SharedData.DiscardPile.Add(popped);
             }
         }
-        private void AddPlayersChanges(ClientRequestModel request,int playerIndex){
+        private void MoveFullPatternLinesToWall(ClientRequestModel request,int playerIndex){
             var playerData=request.GameState.PlayerData[playerIndex];
             var layout=request.GameState.SharedData.Config.WallLayoutToMatch;
             for(int i=0;i<playerData.PatternLines.IndexLimit;i++){
-                if(!playerData.PatternLines[i].IsEmpty)
+                if(playerData.PatternLines[i].IsFull)
                 {
                     var tile=playerData.PatternLines[i].PopOrNull();
                     for(int colNdx=0;colNdx<layout[i].Length;colNdx++)
@@ -44,6 +40,7 @@ namespace Server.Logic.ModelStateChangers
                             break;
                         } 
                     }
+                    DiscardRemainingPatternLineTiles(request,playerData.PatternLines[i]);
                 }
             }
         }

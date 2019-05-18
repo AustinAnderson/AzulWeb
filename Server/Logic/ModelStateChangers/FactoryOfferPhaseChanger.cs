@@ -6,10 +6,10 @@ using Models.Server;
 
 namespace Server.Logic.ModelStateChangers
 {
-    public class FactoryOfferPhaseChnager
+    public class FactoryOfferPhaseChanger
     {
         private PlayerTokenMapHandler mapHandler;
-        public FactoryOfferPhaseChnager(PlayerTokenMapHandler mapHandler)
+        public FactoryOfferPhaseChanger(PlayerTokenMapHandler mapHandler)
         {
             this.mapHandler=mapHandler;
         }
