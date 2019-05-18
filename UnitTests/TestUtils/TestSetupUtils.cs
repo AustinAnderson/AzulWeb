@@ -46,17 +46,16 @@ namespace UnitTests.TestUtils
                 PlayerData=new List<PlayerDataModel>(){
                     new PlayerDataModel{
                         Score=3,
-                        PatternLines=new PatternLinesModel{
-                            LineTwo=new TileModel[]{new TileModel(i++,TileType.Yellow),null}
-                        }
+                        PatternLines=new PatternLinesModel()
                     },
                     new PlayerDataModel{
                         PatternLines=new PatternLinesModel()
                     }
                 }
             };
-            model.PlayerData[0].PatternLines[4][2]=new TileModel(i++,TileType.Black);
-            model.PlayerData[0].FloorLine[2]=new TileModel(i++,TileType.Black);
+            model.PlayerData[0].PatternLines[1].TryAdd(new TileModel(i++,TileType.Yellow));
+            model.PlayerData[0].PatternLines[4].TryAdd(new TileModel(i++,TileType.Black));
+            model.PlayerData[0].FloorLine.TryAdd(new TileModel(i++,TileType.Black));
             model.PlayerData[0].Wall[0][2]=new TileModel(i++,TileType.White);
             return model;
         }

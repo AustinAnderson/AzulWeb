@@ -12,7 +12,7 @@ namespace Models.Client
         public TileModel[][] Wall {get;set;}=new TileModel[5][]{
             new TileModel[5],new TileModel[5],new TileModel[5],new TileModel[5],new TileModel[5]
         };
-        public TileModel[] FloorLine {get;set;}=new TileModel[7];
+        public FixedLengthTileModelQueue FloorLine {get;set;}=new FixedLengthTileModelQueue(7);
 
         public override int GetHashCode()
         {
@@ -27,8 +27,8 @@ namespace Models.Client
             Score=this.Score,
             PatternLines=this.PatternLines?.DeepCopy(),
             Wall=DeepCopyObj<TileModel>.ArrayOfArray(this.Wall),
-            FloorLine=DeepCopyObj<TileModel>.Array(this.FloorLine)
+            FloorLine=FloorLine?.DeepCopy()
         };
     }
-
+//molly epoch
 }

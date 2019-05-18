@@ -46,10 +46,10 @@ namespace UnitTests.ChangeTrackingTests
             var afterState=beforeState.DeepCopy();
             int tId1 = afterState.PlayerData[0].PatternLines[1][0].Id;
             afterState.SharedData.DiscardPile.Add(afterState.PlayerData[0].PatternLines[1][0]);
-            afterState.PlayerData[0].PatternLines[1][0] = null;
-            int tId2 = afterState.PlayerData[0].PatternLines[4][2].Id;
-            afterState.SharedData.DiscardPile.Add(afterState.PlayerData[0].PatternLines[4][2]);
-            afterState.PlayerData[0].PatternLines[4][2] = null;
+            afterState.PlayerData[0].PatternLines[1].PopOrNull();
+            int tId2 = afterState.PlayerData[0].PatternLines[4][0].Id;
+            afterState.SharedData.DiscardPile.Add(afterState.PlayerData[0].PatternLines[4][0]);
+            afterState.PlayerData[0].PatternLines[4].PopOrNull();
 
             var tracker=new ChangeTracker();
             var result=tracker.FindChanges(beforeState,afterState);

@@ -42,7 +42,7 @@ namespace Server.Logic.ChangeTracking
                 });
             }
             FillWallChanges(changes,playerIndex,before.Wall,after.Wall);
-            FillFixedArrayChanges(
+            FillTileQueueChanges(
                 changes,basePath+$".{nameof(PlayerDataModel.FloorLine)}",
                 before.FloorLine,after.FloorLine
             );
@@ -55,7 +55,7 @@ namespace Server.Logic.ChangeTracking
         private void FillPatternLineChanges(GameStateChangesModel changes, string basePath, PatternLinesModel before, PatternLinesModel after)
         {
             for(int i=0;i<after.IndexLimit;i++){
-                FillFixedArrayChanges(
+                FillTileQueueChanges(
                     changes,basePath+$".{after.NameOf(i)}",
                     before[i],after[i]
                 );
@@ -126,16 +126,19 @@ namespace Server.Logic.ChangeTracking
                 }
             }
         }
-        private void FillFixedArrayChanges
+        private void FillTileQueueChanges
         (
-            GameStateChangesModel changes, string basePath, TileModel[] before, TileModel[] after
+            GameStateChangesModel changes, string basePath, 
+            FixedLengthTileModelQueue before, FixedLengthTileModelQueue after
         )
         {
-            if(before.Length!=after.Length)
+            if(before.Count!=after.Count)
             {
-                throw new ArgumentException($"old {basePath} length of {before.Length} doesn't match after of {after.Length}");
+                throw new ArgumentException($"old {basePath} length of {before.Count} "+
+                    $"doesn't match after of {after.Count}"
+                );
             }
-            for(int i=0;i<after.Length;i++){
+            for(int i=0;i<after.Count;i++){
                 if(after[i]!=null&&after[i].Id!=before[i]?.Id){
                     changes.TileChanges.Add(new TileChangeModel{
                         TileId=after[i].Id,

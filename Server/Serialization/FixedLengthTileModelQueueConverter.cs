@@ -1,6 +1,7 @@
 using System;
 using Models.Client;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Server.Serialization
 {
@@ -11,11 +12,12 @@ namespace Server.Serialization
             bool hasExistingValue, JsonSerializer serializer
         )
         {
-            if(hasExistingValue) 
-                return existingValue;
+            //if(hasExistingValue) 
+                //return existingValue;
             if(objectType != typeof(FixedLengthTileModelQueue)) 
                 throw new InvalidCastException($"cannot deserialize {objectType.Name} to {nameof(FixedLengthTileModelQueue)}");
-            var list=JsonConvert.DeserializeObject<TileModel[]>(reader.ReadAsString());
+            JArray array=JArray.Load(reader);
+            var list=array.ToObject<TileModel[]>();
             FixedLengthTileModelQueue toReturn=new FixedLengthTileModelQueue(list.Length);
             foreach(var model in list){
                 toReturn.TryAdd(model);

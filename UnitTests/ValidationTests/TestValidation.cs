@@ -233,9 +233,9 @@ namespace UnitTests.ValidationTests
                     }
                 }
             };
-            model.GameState.PlayerData[0].PatternLines.LineOne[0]=new TileModel{Id=22,Type=TileType.White};
-            model.GameState.PlayerData[0].PatternLines.LineThree[0]=new TileModel{Id=23,Type=TileType.Yellow};
-            model.GameState.PlayerData[0].PatternLines.LineThree[1]=new TileModel{Id=24,Type=TileType.Yellow};
+            model.GameState.PlayerData[0].PatternLines.LineOne.TryAdd(new TileModel{Id=22,Type=TileType.White});
+            model.GameState.PlayerData[0].PatternLines.LineThree.TryAdd(new TileModel{Id=23,Type=TileType.Yellow});
+            model.GameState.PlayerData[0].PatternLines.LineThree.TryAdd(new TileModel{Id=24,Type=TileType.Yellow});
             return model;
         }
         private void AssertExpectedMessage(string expectedPattern,string actual){

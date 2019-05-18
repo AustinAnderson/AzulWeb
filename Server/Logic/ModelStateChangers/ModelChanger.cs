@@ -30,9 +30,9 @@ namespace Server.Logic.ModelStateChangers
         }
         public ResponseModel ProcessRequest(ClientRequestModel request){
             ResponseModel response=new ResponseModel();
-            response.FactoryOfferPhaseTileChanges=factoryOfferPhaseChanger.ProcessClientChanges(request);
+            factoryOfferPhaseChanger.ProcessClientChanges(request);
             if(roundEndHandler.ActionEndsRound(request)){
-                response.WallTileMoves=wallTiler.MovePatternLineTilesToWalls(request);
+                wallTiler.MovePatternLineTilesToWalls(request);
             }
             response.NewGameStateHash=request.GameState.GetHashCode();
             throw new NotImplementedException();

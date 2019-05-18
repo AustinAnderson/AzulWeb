@@ -17,9 +17,9 @@ namespace UnitTests.ChangeTrackingTests
             );
             var beforeState=TestSetupUtils.GetSampleGameStateModel();
             var afterState=beforeState.DeepCopy(); 
-            afterState.PlayerData[0].PatternLines[0][0]=afterState.SharedData.Factories[0].TileOne;
+            afterState.PlayerData[0].PatternLines[0].TryAdd(afterState.SharedData.Factories[0].TileOne);
             afterState.SharedData.Factories[0].TileOne=null;
-            afterState.PlayerData[0].FloorLine[0]=afterState.SharedData.Factories[0].TileThree;
+            afterState.PlayerData[0].FloorLine.TryAdd(afterState.SharedData.Factories[0].TileThree);
             afterState.SharedData.Factories[0].TileThree=null;
             var tracker=new ChangeTracker();
             var result=tracker.FindChanges(beforeState,afterState);
@@ -52,9 +52,9 @@ namespace UnitTests.ChangeTrackingTests
             var beforeState=TestSetupUtils.GetSampleGameStateModel();
             var afterState=beforeState.DeepCopy();
             afterState.PlayerData[0].Wall[1][0] = afterState.PlayerData[0].PatternLines[1][0];
-            afterState.PlayerData[0].PatternLines[1][0] = null;
-            afterState.PlayerData[0].Wall[4][0] = afterState.PlayerData[0].PatternLines[4][2];
-            afterState.PlayerData[0].PatternLines[4][2] = null;
+            afterState.PlayerData[0].PatternLines[1].PopOrNull();
+            afterState.PlayerData[0].Wall[4][0] = afterState.PlayerData[0].PatternLines[4][0];
+            afterState.PlayerData[0].PatternLines[4].PopOrNull();
             var tracker=new ChangeTracker();
             var result=tracker.FindChanges(beforeState,afterState);
             Assert.AreEqual(2,result.WallChanges.Count,"expected two wall changes" );

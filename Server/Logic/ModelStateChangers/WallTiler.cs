@@ -8,19 +8,15 @@ namespace Server.Logic.ModelStateChangers
 {
     public class WallTiler
     {
-        public WallMovePhaseModel MovePatternLineTilesToWalls(ClientRequestModel request)
+        public void MovePatternLineTilesToWalls(ClientRequestModel request)
         {
-            WallMovePhaseModel wallPhaseChanges=new WallMovePhaseModel();
-            wallPhaseChanges.WallChanges=new List<WallChangeModel>();
-            wallPhaseChanges.Discards=new List<TileChangeModel>();
             for(int i=0;i<request.GameState.PlayerData.Count;i++){
-                AddPlayersChanges(request,wallPhaseChanges.WallChanges,i);
-                AddDiscardRemainingPatternLineTiles(request,wallPhaseChanges.Discards,i);
+                AddPlayersChanges(request,i);
+                AddDiscardRemainingPatternLineTiles(request,i);
             }
-            return wallPhaseChanges;
         }
         private void AddDiscardRemainingPatternLineTiles(
-            ClientRequestModel request,List<TileChangeModel> changes,int playerIndex
+            ClientRequestModel request,int playerIndex
         )
         {
             var playerData=request.GameState.PlayerData[playerIndex];
@@ -28,15 +24,11 @@ namespace Server.Logic.ModelStateChangers
                 while(!playerData.PatternLines[i].IsEmpty)
                 {
                     var popped=playerData.PatternLines[i].PopOrNull();
-                    changes.Add(new TileChangeModel{
-                        NewJsonPath=nameof(GameStateModel.SharedData)+"."+nameof(SharedDataModel.DiscardPile),
-                        TileId=popped.Id
-                    });
-                    request.GameState.SharedData.DiscardPile.Add(popped);
+                    if(popped!=null) request.GameState.SharedData.DiscardPile.Add(popped);
                 }
             }
         }
-        private void AddPlayersChanges(ClientRequestModel request,List<WallChangeModel> toAddTo,int playerIndex){
+        private void AddPlayersChanges(ClientRequestModel request,int playerIndex){
             var playerData=request.GameState.PlayerData[playerIndex];
             var layout=request.GameState.SharedData.Config.WallLayoutToMatch;
             for(int i=0;i<playerData.PatternLines.IndexLimit;i++){

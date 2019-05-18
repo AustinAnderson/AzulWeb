@@ -9,6 +9,11 @@ namespace UnitTests.ModelTests
     public class TestCustomModelSerialization
     {
         [TestMethod]
+        public void FixedLengthTileModelQueueDeserializes(){
+            string json="[{'Id':2,'Type':'Blue'},{'Id':3,'Type':'Blue'},null]";
+            var model=JsonConvert.DeserializeObject<FixedLengthTileModelQueue>(json);
+        }
+        [TestMethod]
         public void PatternLineDeserializes()
         {
             string json="{"+
@@ -19,6 +24,31 @@ namespace UnitTests.ModelTests
                 "'LineFive': [{'Id':8,'Type':'Black'},{'Id':9,'Type':'Black'},{'Id':10,'Type':'Black'},null,null]"+
             "}";
             var model=JsonConvert.DeserializeObject<PatternLinesModel>(json);
+            AssertLinesEqual(model.LineOne,new TileModel[]{null},"LineOne");
+            AssertLinesEqual(model.LineTwo,new TileModel[]{
+                new TileModel(2,TileType.Blue), new TileModel(3,TileType.Blue)
+            },"LineTwo");
+            AssertLinesEqual(model.LineThree,new TileModel[]{
+                new TileModel(4,TileType.Blue), new TileModel(5,TileType.Blue),null
+            },"LineThree");
+            AssertLinesEqual(model.LineFour,new TileModel[]{
+                new TileModel(6,TileType.Blue), new TileModel(7,TileType.Blue),null,null
+            },"LineFour");
+            AssertLinesEqual(model.LineFive,new TileModel[]{
+                new TileModel(8,TileType.Black), new TileModel(9,TileType.Black),new TileModel(10,TileType.Black),
+                null,null
+            },"LineFive");
+        }
+        private void AssertLinesEqual(FixedLengthTileModelQueue deserialized,TileModel[] expected,string lineName){
+            Assert.AreEqual(expected.Length,deserialized.Count,lineName+".Count");
+            for(int i=0;i<expected.Length;i++){
+
+                Assert.AreEqual(getStringRep(expected[i]),getStringRep(deserialized[i]),$"{lineName}[{i}]");
+            }
+        }
+        private string getStringRep(TileModel t){
+            if(t==null) return "<null>";
+            return $"{t.Id};{t.Type}";
         }
     }
 }
