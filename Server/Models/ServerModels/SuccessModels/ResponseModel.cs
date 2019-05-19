@@ -18,7 +18,7 @@ namespace Models.Server
         public WallMovePhaseModel WallTileMoves {get;set;}
         public List<ScoreChangeModel> ScoreChanges {get;set;}
         public List<TileChangeModel> NextRoundSetupChanges {get;set;}
-        bool GameOver{get;set;}
+        public bool GameOver{get;set;}
         public int LeadingPlayerIndex{get;set;}
         public int NewTurnsPlayerIndex{get;set;}
     }

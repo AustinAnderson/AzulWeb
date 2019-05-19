@@ -22,7 +22,58 @@ namespace Server.Logic.ModelStateChangers
             }
         }
         public void AddFinalBonusesToScore(ClientRequestModel request){
-            
+            //TODO: how to best display where the bonuses came from and what they were
+            for(int i=0;i<request.GameState.PlayerData.Count;i++){
+                var playerData=request.GameState.PlayerData[i];
+                var playerWall=playerData.Wall;
+                for(int r=0;r<playerWall.Length;r++){
+                    if(WallRowFilled(playerWall,r)){
+                        playerData.Score+=request.GameState.SharedData.Config.RowBonus;
+                    } 
+                }
+                for(int c=0;c<playerWall[0].Length;c++)
+                {
+                    if(WallColFilled(playerWall,c)){
+                        playerData.Score+=request.GameState.SharedData.Config.ColBonus;
+                    } 
+                }
+                foreach(int type in Enum.GetValues(typeof(TileType))){
+                    if(AllOfKindFilled(playerWall,type)){
+                        playerData.Score+=request.GameState.SharedData.Config.AllOfKindBonus;
+                    }
+                }
+            }
+        }
+
+        //since the wall cant be jagged and a type cant be repeated in a row,
+        //the number of of a given type is equal to the number of rows
+        private bool AllOfKindFilled(TileModel[][] playerWall,int type){
+            int typeCount=0;
+            for(int r=0;r<playerWall.Length;r++){
+                for(int c=0;c<playerWall[r].Length;c++){
+                    if(playerWall[r][c]!=null&&(int)playerWall[r][c].Type==type){
+                        typeCount++;
+                    }
+                }
+            }
+            return typeCount==playerWall.Length;
+        }
+
+        private bool WallColFilled(TileModel[][] wall, int colIndex){
+            bool filled=true;
+            for(int i=0;i<wall.Length;i++)
+            {
+                if(wall[i][colIndex]==null) filled=false;
+            }
+            return filled;
+        }
+        private bool WallRowFilled(TileModel[][] wall, int rowIndex){
+            bool filled=true;
+            for(int i=0;i<wall[rowIndex].Length;i++)
+            {
+                if(wall[rowIndex][i]==null) filled=false;
+            }
+            return filled;
         }
         private void UpdateScoreForPlayer(PlayerDataModel playerData,IEnumerable<WallChangeModel> changesForPlayer)
         {

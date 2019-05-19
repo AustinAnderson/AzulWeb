@@ -18,6 +18,20 @@ namespace Server.Logic.ModelStateChangers
             }
             return phaseDone;
         }
+        public bool GameHasEnded(ClientRequestModel request){
+            bool gameOver=false;
+            var playerData=request.GameState.PlayerData;
+            for(int i=0;i<playerData.Count;i++){
+                for(int r=0;r<playerData[i].Wall.Length;r++){
+                    bool rowFull=true;
+                    for(int c=0;c<playerData[i].Wall[r].Length;c++){
+                        if(playerData[i].Wall[r][c]==null) rowFull=false;
+                    }
+                    if(rowFull) gameOver=true;
+                }
+            }
+            return gameOver;
+        }
 
         public void SetupNextRound(ClientRequestModel request)
         {

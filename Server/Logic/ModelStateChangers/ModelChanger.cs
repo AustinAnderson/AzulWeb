@@ -39,7 +39,6 @@ namespace Server.Logic.ModelStateChangers
             factoryOfferPhaseChanger.ProcessClientChanges(request);
             var changesThisStep=tracker.FindChanges(oldState,request.GameState);
             response.FactoryOfferPhaseTileChanges=changesThisStep.TileChanges;
-
             if(roundEndHandler.ActionEndsRound(request))
             {
                 oldState=request.GameState.DeepCopy();
@@ -51,12 +50,19 @@ namespace Server.Logic.ModelStateChangers
                 };
                 oldState=request.GameState.DeepCopy();
                 scoringCalculator.UpdateScores(request,response.WallTileMoves.WallChanges);
-                roundEndHandler.SetupNextRound(request);
+                response.GameOver=roundEndHandler.GameHasEnded(request);
+                if(response.GameOver)
+                {
+                    scoringCalculator.AddFinalBonusesToScore(request);
+                }
+                else{
+                    roundEndHandler.SetupNextRound(request);
+                }
                 changesThisStep=tracker.FindChanges(oldState,request.GameState);
+                response.ScoreChanges=changesThisStep.ScoreChanges;
+                response.NextRoundSetupChanges=changesThisStep.TileChanges;
+                UpdateLeadingPlayer(response,request.GameState.PlayerData);
             }
-            response.ScoreChanges=changesThisStep.ScoreChanges;
-            response.NextRoundSetupChanges=changesThisStep.TileChanges;
-            UpdateLeadingPlayer(response,request.GameState.PlayerData);
             response.NewGameStateHash=request.GameState.GetHashCode();
             return response;
         }
