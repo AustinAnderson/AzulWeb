@@ -10,10 +10,12 @@ namespace Models.Client
         public string PlayerTokenMapEnc {get;set;}
         public SharedDataModel SharedData {get;set;}
         public List<PlayerDataModel> PlayerData {get;set;}
+        public string GameId {get;set;}
 
         public override int GetHashCode()
         {
             int hash = 17;
+            ModelHashUtils.CombineHash(ref hash,GameId?.GetHashCode());
             ModelHashUtils.CombineHash(ref hash,PlayerTokenMapEnc?.GetHashCode());
             ModelHashUtils.CombineHash(ref hash,SharedData?.GetHashCode());
             ModelHashUtils.CombineHash(ref hash,ModelHashUtils.HashOfEnumerable(PlayerData));
@@ -21,6 +23,7 @@ namespace Models.Client
         }
 
         public GameStateModel DeepCopy()=>new GameStateModel{
+            GameId=this.GameId,
             PlayerTokenMapEnc=this.PlayerTokenMapEnc,
             SharedData=this.SharedData?.DeepCopy(),
             PlayerData=DeepCopyObj<PlayerDataModel>.List(this.PlayerData)
