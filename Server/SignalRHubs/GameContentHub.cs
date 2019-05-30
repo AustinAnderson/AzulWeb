@@ -5,16 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Models.Client;
 using Server.Models.ServerModels.ChangeTrackingModels;
+using Server.Models.ServerModels.SetupModels;
 
 namespace Server.SignalRHubs
 {
     //public are called by the client
     public class GameContentHub:Hub
     {
-        internal async Task SendGameStart(GameStateModel state)
+        internal async Task SendGameStart(InitialStateModel state)
         {
-            await ReinsertToGroup(state.GameId,state.PlayerData.Select(p=>p.ConnectionId));
-            await Clients.Group(state.GameId).SendAsync("GameStart",state);
+            await ReinsertToGroup(
+                state.InitialState.GameId,
+                state.InitialState.PlayerData.Select(p=>p.ConnectionId)
+            );
+            await Clients.Group(state.InitialState.GameId).SendAsync("GameStart",state);
         }
         internal async Task SendUpdate(
             string gameId,GameStateChangesModel stateChanges, IEnumerable<string> connectionIds

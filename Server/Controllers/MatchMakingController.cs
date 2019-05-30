@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Models.Client;
 using Server.MatchMaking;
+using Server.Models.ServerModels.SetupModels;
 using Server.SignalRHubs;
 
 namespace Server.Controllers
@@ -26,7 +27,7 @@ namespace Server.Controllers
         public async Task<ActionResult> StartNewGame(string gameId,[FromBody] List<string> connectionIds)
         {
             //make new initial game state and broadcast it to the ids
-            GameStateModel initialState=gameCreator.GenerateNewGame(gameId,connectionIds);
+            InitialStateModel initialState=gameCreator.GenerateNewGame(gameId,connectionIds);
             await hub.SendGameStart(initialState);
             return Ok();
         }
