@@ -7,12 +7,12 @@ namespace Models.Client
 {
     public class SharedDataModel:IDeepCopyable<SharedDataModel>
     {
-        public ConfigModel Config {get;set;}
-        public HashSet<TileModel> DiscardPile {get;set;}
-        public HashSet<TileModel> CenterOfTable {get;set;}
-        public HashSet<TileModel> Bag {get;set;}
+        public ConfigModel Config {get;set;}=new ConfigModel();
+        public HashSet<TileModel> DiscardPile {get;set;}=new HashSet<TileModel>();
+        public HashSet<TileModel> CenterOfTable {get;set;}=new HashSet<TileModel>();
+        public HashSet<TileModel> Bag {get;set;}=new HashSet<TileModel>();
         public FactoryModel[] Factories {get;set;}
-        public int CurrentTurnsPlayersIndex{get;set;}
+        public int CurrentTurnsPlayersIndex{get;set;}=0;
 
 
         public override int GetHashCode()
