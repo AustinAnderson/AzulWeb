@@ -34,6 +34,12 @@ namespace Server.SignalRHubs
                 await Groups.AddToGroupAsync(id,gameId);
             }
         }
+
+        internal Task SendToken(string connectionId, PlayerIndexAndToken token)
+        {
+            return Clients.Client(connectionId).SendAsync("SetPlayerTokenAndIndex",token);
+        }
+
         //client: connect.done(()=>server.RebroadcastJoinedGame)
         //sends broadcast with username and connecting id,
         //game making client holds those connection ids, and 

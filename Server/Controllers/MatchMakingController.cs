@@ -27,7 +27,14 @@ namespace Server.Controllers
         public async Task<ActionResult> StartNewGame(string gameId,[FromBody] List<string> connectionIds)
         {
             //make new initial game state and broadcast it to the ids
-            InitialStateModel initialState=gameCreator.GenerateNewGame(gameId,connectionIds);
+            InitialStateModel initialState=gameCreator.GenerateNewGame(
+                out Dictionary<string,PlayerIndexAndToken> tokensByConnection,
+                gameId,connectionIds
+            );
+            foreach(var kvp in tokensByConnection)
+            {
+                await hub.SendToken(kvp.Key,kvp.Value);
+            }
             await hub.SendGameStart(initialState);
             return Ok();
         }
