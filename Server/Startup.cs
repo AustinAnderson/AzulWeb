@@ -47,7 +47,7 @@ namespace Server
             app.UseMvc();
             app.UseSignalR(route =>
             {
-                route.MapHub<GameContentHub>("/chathub");
+                route.MapHub<GameContentHub>("/hub");
             });
         }
     }
