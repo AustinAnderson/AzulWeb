@@ -47,7 +47,10 @@ namespace Server.SignalRHubs
         public async Task RebroadCastJoinedGame(string userId,string gameId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId,gameId);
-            await Clients.Group(gameId).SendAsync("JoinedGame",userId);
+            await Clients.Group(gameId).SendAsync(
+                "JoinedGame",
+                (connectionId: Context.ConnectionId, userId:userId)
+            );
         }
     }
 }

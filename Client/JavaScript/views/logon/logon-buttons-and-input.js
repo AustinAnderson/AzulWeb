@@ -2,9 +2,16 @@ import {LitElement,html} from 'lit-element';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-button/paper-input.js';
 
-class LogonButtonsAndInput extends LitElement
+class LogonPage extends LitElement
 {
+    static TagName(){ return "longon-page"; }
+    static AppendNewTo(domParent) {
+        var tag=document.createElement(LogonPage.TagName());
+        domParent.appendChild(tag);
+        return tag;
+    }
     constructor(){
+        this.hidden=true;
         var private={
             gameId: "",
             userId: "",
@@ -18,7 +25,9 @@ class LogonButtonsAndInput extends LitElement
             UserNameEnteredAction:()=>{},
             UserNameClearedAction:()=>{},
             ContextAwareButtonAction:()=>{},
+            RemoveAllUsers(){
 
+            },
             RoomCodeChanged(){
                 if(gameId==""){ private.RoomCodeClearedAction();}
                 else { private.RoomCodeEnteredAction(); }
@@ -27,11 +36,9 @@ class LogonButtonsAndInput extends LitElement
                 if(userId==""){ private.UserNameClearedAction();}
                 else { private.UserNameEnteredAction(); }
             },
-            RemoveAllUsers(){
-
-            },
             CancelGameButtonClicked(){
-
+                OnGameCancelled(private.gameId);
+                RoomTornDown();
             },
             contextButtonHandlers={
                 HostNewGameClicked(){
@@ -41,16 +48,15 @@ class LogonButtonsAndInput extends LitElement
                 JoinGameClicked(){
                     private.become.WaitForHostToStart();
                 },
-                StartGameClicked(){
-
-                },
                 LeaveLobby(){
                     private.become.ReadyToJoin();
+                },
+                StartGameClicked(){
+                    OnGameStart();
                 }
             },
             become={
                 NeedNameAndCode(){
-                    RemoveAllUsers();
                     private.cancelGameButtonHidden=true;
                     private.buttonContext="Host Game";
                     private.buttonDisabled=true;
@@ -63,7 +69,6 @@ class LogonButtonsAndInput extends LitElement
                     private.UserNameEnteredAction=private.become.ReadyToHost;
                 },
                 NeedNameToJoin(){
-                    RemoveAllUsers();
                     private.cancelGameButtonHidden=true;
                     private.buttonContext="Join Game";
                     private.buttonDisabled=true;
@@ -76,7 +81,6 @@ class LogonButtonsAndInput extends LitElement
                     private.UserNameEnteredAction=private.become.ReadyToJoin;
                 },
                 ReadyToHost(){
-                    RemoveAllUsers();
                     private.cancelGameButtonHidden=true;
                     private.buttonContext="Host Game";
                     private.buttonDisabled=false;
@@ -89,7 +93,6 @@ class LogonButtonsAndInput extends LitElement
                     private.UserNameEnteredAction=()=>{};
                 },
                 ReadyToJoin(){
-                    RemoveAllUsers();
                     private.cancelGameButtonHidden=true;
                     private.buttonContext="Join Game";
                     private.buttonDisabled=false;
@@ -144,27 +147,57 @@ class LogonButtonsAndInput extends LitElement
         }
     }
 
-    UserAdded(userId,playerIconSrc)
+    UserAdded(connectionId,userId,playerIconSrc)
     {
         document.querySelector("div")
+        if(playerCount>=2){
+            private.become.ReadyToStart();
+        }
     }
     UserRemoved(userId){
 
     }
+    /**
+     * to be called by the user when a game session is cancelled by the host
+     * @memberof LogonButtonsAndInput
+     */
+    RoomTornDown(){
+        private.RemoveAllUsers();
+        private.gameId="";//will this fire onchange?
+        private.become.ReadyToHost();
+    }
 
     /**
-     * intented to be overwritten with a call back for retrieving the new
+     * intended to be overwritten with a call back for retrieving the new
      * game code from the server
      * @returns {string} server created game code
      * @memberof LogonButtonsAndInput
      */
     OnHostGameClicked=()=>{
-        alert("LogonButtonsAndInput.OnHostGameClicked never assigned!");
+        alert(LogonPage.name+"."+OnHostGameClicked.name+" never assigned!");
         return "";
+    }
+    /**
+     * intended to be overwritten with a call back for making the server cancel the game
+     * @param {string} cancelledGameId the id of the game that was cancelled
+     * 
+     * @memberof LogonButtonsAndInput
+     */
+    OnGameCancelled=(cancelledGameId) =>{
+        alert(LogonPage.name+"."+OnGameCancelled.name+" never assigned!");
+    }
+    /**
+     * intended to be overwritten with a call back for making the server start the game
+     * and the outer class to switch the view to the main game view
+     * 
+     * @memberof LogonButtonsAndInput
+     */
+    OnGameStart=()=>{
+        alert(LogonPage.name+"."+OnGameStart.name+" never assigned!");
     }
     render(){
         html`
-            <div>
+            <div hidden={{Hidden}}>
                 <papper-input label="room code" 
                               disabled={{private.gameIdEditable}} 
                               value={{private.gameId}}
@@ -197,4 +230,4 @@ class LogonButtonsAndInput extends LitElement
         `;
     }
 }
-customElements.define("logon-buttons-and-input",LogonButtonsAndInput);
+customElements.define(LogonPage.TagName(),LogonPage);

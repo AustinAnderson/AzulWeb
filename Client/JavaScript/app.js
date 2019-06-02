@@ -1,5 +1,6 @@
 import $ from 'jquery';
-import SignalRClient from 'signalrClient.js'
+import SignalRClient from './util/signalrClient.js'
+import ApiAccess from './util/apiAccess.js'
 
 class Main
 {
@@ -22,8 +23,22 @@ class Main
             },
             userId=>this.signalrClient.NotifyServerGameJoined(userId,this.gameState.gameId)
         );
+        this.restClient=new ApiAccess();
+        var logonPage=LogonPage.AppendNewTo($('#PageContent'));
+        logonPage.OnHostGameClicked=()=>{ 
+            var gameId="";
+            restClient.requestNewGame()
+                      .done(res=>gameId=res)
+                      .fail(()=>alert("unable to get new game from server"));
+            return gameId;
+        }
+        //logonPage.OnGameCancelled=
+        //logonPage.OnGameStart=
+        logonPage.hidden=false;
     }
     updateGame(stateChanges){
         console.log(stateChanges);
     }
+
 }
+new Main();
