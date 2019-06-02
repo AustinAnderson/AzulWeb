@@ -14,7 +14,7 @@ class Main
                 this.gameState=initialState.initialState;
                 this.gameHash=initialState.initialHash;
             },
-            stateChanges=>console.log(stateChanges),
+            updateGame,
             playerTokenAndIndex=>{
                 console.log(playerTokenAndIndex);
                 this.playerToken=playerTokenAndIndex.playerToken;
@@ -22,5 +22,8 @@ class Main
             },
             userId=>this.signalrClient.NotifyServerGameJoined(userId,this.gameState.gameId)
         );
+    }
+    updateGame(stateChanges){
+        console.log(stateChanges);
     }
 }
