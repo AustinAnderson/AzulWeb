@@ -1,6 +1,6 @@
 import $ from 'jquery';
-import SignalRClient from './util/signalrClient.js'
-import ApiAccess from './util/apiAccess.js'
+import {SignalRClient} from './util/signalrClient.js'
+import {ApiAccess} from './util/apiAccess.js'
 
 class Main
 {
@@ -15,7 +15,7 @@ class Main
                 this.gameState=initialState.initialState;
                 this.gameHash=initialState.initialHash;
             },
-            updateGame,
+            this.updateGame,
             playerTokenAndIndex=>{
                 console.log(playerTokenAndIndex);
                 this.playerToken=playerTokenAndIndex.playerToken;
@@ -24,9 +24,11 @@ class Main
             userId=>this.signalrClient.NotifyServerGameJoined(userId,this.gameState.gameId)
         );
         this.restClient=new ApiAccess();
-        var logonPage=LogonPage.AppendNewTo($('#PageContent'));
+        /*
+        var logonPage=document.querySelector("logon-page");
         logonPage.OnHostGameClicked=()=>{ 
             var gameId="";
+            console.log("call api request new game");
             restClient.requestNewGame()
                       .done(res=>gameId=res)
                       .fail(()=>alert("unable to get new game from server"));
@@ -35,6 +37,7 @@ class Main
         //logonPage.OnGameCancelled=
         //logonPage.OnGameStart=
         logonPage.hidden=false;
+        */
     }
     updateGame(stateChanges){
         console.log(stateChanges);

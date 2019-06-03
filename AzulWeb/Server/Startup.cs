@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.IO;
+using Microsoft.Extensions.FileProviders;
 using Server.SignalRHubs;
 
 namespace Server
@@ -42,8 +44,8 @@ namespace Server
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseStaticFiles("/Client/dist");
-
+            app.UseStaticFiles();
+            app.UseDefaultFiles();
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseSignalR(route =>

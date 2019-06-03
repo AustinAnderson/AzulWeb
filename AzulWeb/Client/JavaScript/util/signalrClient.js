@@ -1,6 +1,6 @@
-import {HubConnection} from '@aspnet/signalr'
+import {HubConnectionBuilder,LogLevel} from '@aspnet/signalr'
 
-export class SignalRClient extends HubConnection
+export class SignalRClient
 {
     /**
      *Creates an instance of SignalRClient.
@@ -16,11 +16,14 @@ export class SignalRClient extends HubConnection
         SetPlayerTokenAndIndexCallBack,
         JoinedGameCallBack
     ){
-        super("/hub");
-        this.on("GameStart",gameStartCallBack);
-        this.on("Update",UpdateCallBack);
-        this.on("SetPlayerTokenAndIndex",SetPlayerTokenAndIndexCallBack);
-        this.on("JoinedGame",JoinedGameCallBack);
+        var hub=new HubConnectionBuilder()
+                    .withUrl("/hub")
+                    .configureLogging(LogLevel.Information)
+                    .build();
+        hub.on("GameStart",gameStartCallBack);
+        hub.on("Update",UpdateCallBack);
+        hub.on("SetPlayerTokenAndIndex",SetPlayerTokenAndIndexCallBack);
+        hub.on("JoinedGame",JoinedGameCallBack);
     }
 
     /**
@@ -31,6 +34,6 @@ export class SignalRClient extends HubConnection
      */
     NotifyServerGameJoined(userId,gameId)
     {
-        return this.invoke("RebroadCastJoinedGame",[userId,gameId]);
+        return hub.invoke("RebroadCastJoinedGame",[userId,gameId]);
     }
 }

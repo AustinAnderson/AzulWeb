@@ -5,7 +5,8 @@ class LogonUserIcon extends LitElement
     static TagName(){return "logon-user-icon";}
     constructor()
     {
-        var private={
+        super();
+        var _private={
             hidden=true,
             playerIconSource="",
             userId=""
@@ -14,18 +15,18 @@ class LogonUserIcon extends LitElement
     isAdded(){return !private.hidden;}
     addUser(playerIconSrc,userId)
     {
-        private.playerIconSource=playerIconSrc;
-        private.userId=userId;
-        private.hidden=false;
+        _private.playerIconSource=playerIconSrc;
+        _private.userId=userId;
+        _private.hidden=false;
     }
     removeUser(){
-        private.hidden=true;
-        private.playerIconSource="";
-        private.userId="";
+        _private.hidden=true;
+        _private.playerIconSource="";
+        _private.userId="";
     }
     render()
     {
-        html`
+        return html`
             <div class="${TagName()}" hidden={{private.hidden}}>
                 <img src={{private.playerIconSource}} />
                 <p>{{private.userId}}</p>
