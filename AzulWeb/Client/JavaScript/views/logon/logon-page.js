@@ -5,14 +5,11 @@ import '@polymer/paper-input/paper-input.js';
 export class LogonPage extends LitElement
 {
     static TagName(){ return "longon-page"; }
-    static AppendNewTo(domParent) {
-        console.log(domParent);
-        var tag=document.createElement(LogonPage.TagName());
-        tag.hidden=true;
-        domParent.appendChild(tag);
-        return tag;
+    static get properties(){
+        return {};
     }
     constructor(){
+        super();
         console.log("logon constructor run");
         /**
          * intended to be overwritten with a call back for making the server cancel the game
@@ -202,27 +199,29 @@ export class LogonPage extends LitElement
         return html`
             <div>
                 <papper-input label="room code" 
-                              disabled={{_private.gameIdEditable}} 
-                              value={{_private.gameId}}
+                              disabled="${this._private.gameIdEditable}"
+                              value="${this._private.gameId}"
+                              @change="${this._private.RoomCodeChanged}"
                               >
                 </papper-input>
 
                 <papper-input label="user name" 
-                              disabled={{_private.userIdEditable}}
-                              value={{_private.userId}}
+                              disabled="${this._private.userIdEditable}"
+                              value="${this._private.userId}"
+                              @change="${this._private.UserNameChanged}"
                               >
                 </papper-input>
 
-                <papper-button hidden={{_private.cancelGameButtonHidden}}
-                               on-click={{_private.CancelGameButtonClicked}}
+                <papper-button ?hidden="${this._private.cancelGameButtonHidden}"
+                               @click="${this._private.CancelGameButtonClicked}"
                                >
                     "Cancel"
                 </papper-button>
 
-                <papper-button disabled={{_private.buttonDisabled}}
-                               on-click={{_private.ContextAwareButtonAction}}
+                <papper-button disabled="${this._private.buttonDisabled}"
+                               @click="${this._private.ContextAwareButtonAction}"
                                >
-                    {{_private.buttonContext}}
+                    ${this._private.buttonContext}
                 </papper-button>
 
                 <logon-user-icon></logon-user-icon>

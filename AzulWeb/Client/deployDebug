@@ -1,6 +1,0 @@
-#!/bin/bash
-#deployDebug: Script to ...
-#Created: Sun Jun  2 18:07:09 CDT 2019
-rm -r ../Server/wwwroot/*
-cp -r * ../Server/wwwroot/
-exit 0
