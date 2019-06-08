@@ -6,7 +6,9 @@ export class LogonPage extends LitElement
 {
     static TagName(){ return "longon-page"; }
     static get properties(){
-        return {};
+        return {
+            _private: {type:Object},
+        };
     }
     constructor(){
         super();
@@ -39,7 +41,7 @@ export class LogonPage extends LitElement
             alert(LogonPage.name+"."+OnHostGameClicked.name+" never assigned!");
             return "";
         }
-        var _private={
+        this._private={
             gameId: "",
             userId: "",
             gameIdEditable: true,
