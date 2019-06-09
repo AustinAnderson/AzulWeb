@@ -7,36 +7,18 @@ export class LogonPage extends LitElement
     static TagName(){ return "longon-page"; }
     static get properties(){
         return {
-            this._private: {type:Object},
+            _private: {type:Object},
+            OnGameCancelled: {type: Object },
+            OnGameStart: {type: Object },
+            OnHostGameClicked: {type: Object},
+            gameId: {type:String},
+            userId: {type:String},
+            gameIdEditable: {type:Boolean},
+            userIdEditable: {type:Boolean},
+            buttonContext: {type:String},
+            buttonDisabled: {type:Boolean},
+            cancelGameButtonHidden: {type:Boolean}
         };
-    }
-    /**
-     * intended to be overwritten with a call back for making the server cancel the game
-     * @param {string} cancelledGameId the id of the game that was cancelled
-     * 
-     * @memberof LogonButtonsAndInput
-     */
-    OnGameCancelled=(cancelledGameId) =>{
-        alert(LogonPage.name+"."+OnGameCancelled.name+" never assigned!");
-    }
-    /**
-     * intended to be overwritten with a call back for making the server start the game
-     * and the outer class to switch the view to the main game view
-     * 
-     * @memberof LogonButtonsAndInput
-     */
-    OnGameStart=()=>{
-        alert(LogonPage.name+"."+OnGameStart.name+" never assigned!");
-    }
-    /**
-     * intended to be overwritten with a call back for retrieving the new
-     * game code from the server
-     * @returns {string} server created game code
-     * @memberof LogonButtonsAndInput
-     */
-    OnHostGameClicked=()=>{
-        alert(LogonPage.name+"."+OnHostGameClicked.name+" never assigned!");
-        return "";
     }
     RoomCodeChanged(){
         if(gameId==""){ this._private.RoomCodeClearedAction();}
@@ -48,15 +30,32 @@ export class LogonPage extends LitElement
     }
     constructor(){
         super();
+        this.gameId= "";
+        this.userId= "";
+        this.gameIdEditable= true;
+        this.userIdEditable= true;
+        this.buttonContext="Host Game";
+        this.buttonDisabled=true;
+        this.cancelGameButtonHidden=true;
+        //intended to be overwritten with a call back for making the server cancel the game
+        this.OnGameCancelled=(cancelledGameId) =>{
+            alert(LogonPage.name+"."+OnGameCancelled.name+" never assigned!");
+        }
+        //intended to be overwritten with a call back for making the server start the game
+        //and the outer class to switch the view to the main game view
+        this.OnGameStart=()=>{ alert(LogonPage.name+"."+OnGameStart.name+" never assigned!"); }
+        /**
+         * intended to be overwritten with a call back for retrieving the new
+         * game code from the server
+         * @returns {string} server created game code
+         * @memberof LogonButtonsAndInput
+         */
+        this.OnHostGameClicked=()=>{
+            alert(LogonPage.name+"."+OnHostGameClicked.name+" never assigned!");
+            return "";
+        }
         
         this._private={
-            gameId: "",
-            userId: "",
-            gameIdEditable: true,
-            userIdEditable: true,
-            buttonContext:"Host Game",
-            buttonDisabled:true,
-            cancelGameButtonHidden:true,
             RoomCodeEnteredAction:()=>{},
             RoomCodeClearedAction:()=>{},
             UserNameEnteredAction:()=>{},
@@ -86,11 +85,11 @@ export class LogonPage extends LitElement
             },
             become:{
                 NeedNameAndCode(){
-                    this._private.cancelGameButtonHidden=true;
-                    this._private.buttonContext="Host Game";
-                    this._private.buttonDisabled=true;
-                    this._private.gameIdEditable=true;
-                    this._private.userIdEditable=true;
+                    this.cancelGameButtonHidden=true;
+                    this.buttonContext="Host Game";
+                    this.buttonDisabled=true;
+                    this.gameIdEditable=true;
+                    this.userIdEditable=true;
                     this._private.ContextAwareButtonAction=()=>{};
                     this._private.RoomCodeClearedAction=()=>{};
                     this._private.UserNameClearedAction=()=>{};
@@ -98,36 +97,36 @@ export class LogonPage extends LitElement
                     this._private.UserNameEnteredAction=this._private.become.ReadyToHost;
                 },
                 NeedNameToJoin(){
-                    this._private.cancelGameButtonHidden=true;
-                    this._private.buttonContext="Join Game";
-                    this._private.buttonDisabled=true;
+                    this.cancelGameButtonHidden=true;
+                    this.buttonContext="Join Game";
+                    this.buttonDisabled=true;
+                    this.gameIdEditable=true;
+                    this.userIdEditable=true;
                     this._private.ContextAwareButtonAction=()=>{};
-                    this._private.gameIdEditable=true;
-                    this._private.userIdEditable=true;
                     this._private.RoomCodeClearedAction=this._private.become.NeedNameAndCode;
                     this._private.RoomCodeEnteredAction=()=>{};
                     this._private.UserNameClearedAction=()=>{};
                     this._private.UserNameEnteredAction=this._private.become.ReadyToJoin;
                 },
                 ReadyToHost(){
-                    this._private.cancelGameButtonHidden=true;
-                    this._private.buttonContext="Host Game";
-                    this._private.buttonDisabled=false;
+                    this.cancelGameButtonHidden=true;
+                    this.buttonContext="Host Game";
+                    this.buttonDisabled=false;
+                    this.gameIdEditable=true;
+                    this.userIdEditable=true;
                     this._private.ContextAwareButtonAction=this._private.contextButtonHandlers.HostNewGameClicked;
-                    this._private.gameIdEditable=true;
-                    this._private.userIdEditable=true;
                     this._private.RoomCodeClearedAction=()=>{};
                     this._private.RoomCodeEnteredAction=this._private.become.NeedNameToJoin;
                     this._private.UserNameClearedAction=this._private.become.NeedNameAndCode;
                     this._private.UserNameEnteredAction=()=>{};
                 },
                 ReadyToJoin(){
-                    this._private.cancelGameButtonHidden=true;
-                    this._private.buttonContext="Join Game";
-                    this._private.buttonDisabled=false;
+                    this.cancelGameButtonHidden=true;
+                    this.buttonContext="Join Game";
+                    this.buttonDisabled=false;
+                    this.gameIdEditable=true;
+                    this.userIdEditable=true;
                     this._private.ContextAwareButtonAction=this._private.contextButtonHandlers.JoinGameClicked;
-                    this._private.gameIdEditable=true;
-                    this._private.userIdEditable=true;
                     this._private.RoomCodeClearedAction=this._private.become.ReadyToHost;
                     this._private.RoomCodeEnteredAction=()=>{};
                     this._private.UserNameClearedAction=this._private.become.NeedNameToJoin;
@@ -135,12 +134,12 @@ export class LogonPage extends LitElement
                 },
                 WaitForMorePlayers()
                 {
-                    this._private.cancelGameButtonHidden=false;
-                    this._private.buttonContext="Start Game";
-                    this._private.buttonDisabled=true;
+                    this.cancelGameButtonHidden=false;
+                    this.buttonContext="Start Game";
+                    this.buttonDisabled=true;
+                    this.gameIdEditable=false;
+                    this.userIdEditable=false;
                     this._private.ContextAwareButtonAction=()=>{};
-                    this._private.gameIdEditable=false;
-                    this._private.userIdEditable=false;
                     this._private.RoomCodeClearedAction=()=>{};
                     this._private.RoomCodeEnteredAction=()=>{};
                     this._private.UserNameClearedAction=()=>{};
@@ -148,12 +147,12 @@ export class LogonPage extends LitElement
                 },
                 ReadyToStart()
                 {
-                    this._private.cancelGameButtonHidden=false;
-                    this._private.buttonContext="Start Game";
-                    this._private.buttonDisabled=false;
+                    this.cancelGameButtonHidden=false;
+                    this.buttonContext="Start Game";
+                    this.buttonDisabled=false;
+                    this.gameIdEditable=false;
+                    this.userIdEditable=false;
                     this._private.ContextAwareButtonAction=this._private.contextButtonHandlers.StartGameClicked;
-                    this._private.gameIdEditable=false;
-                    this._private.userIdEditable=false;
                     this._private.RoomCodeClearedAction=()=>{};
                     this._private.RoomCodeEnteredAction=()=>{};
                     this._private.UserNameClearedAction=()=>{};
@@ -161,12 +160,12 @@ export class LogonPage extends LitElement
                 },
                 WaitForHostToStart()
                 {
-                    this._private.cancelGameButtonHidden=true;
-                    this._private.buttonContext="Leave Lobby";
-                    this._private.buttonDisabled=false;
+                    this.cancelGameButtonHidden=true;
+                    this.buttonContext="Leave Lobby";
+                    this.buttonDisabled=false;
+                    this.gameIdEditable=false;
+                    this.userIdEditable=false;
                     this._private.ContextAwareButtonAction=this._private.contextButtonHandlers.LeaveLobby;
-                    this._private.gameIdEditable=false;
-                    this._private.userIdEditable=false;
                     this._private.RoomCodeClearedAction=()=>{};
                     this._private.RoomCodeEnteredAction=()=>{};
                     this._private.UserNameClearedAction=()=>{};
@@ -192,7 +191,7 @@ export class LogonPage extends LitElement
      */
     RoomTornDown(){
         this._private.RemoveAllUsers();
-        this._private.gameId="";//will this fire onchange?
+        this.gameId="";//will this fire onchange?
         this._private.become.ReadyToHost();
     }
 
@@ -201,29 +200,29 @@ export class LogonPage extends LitElement
         return html`
             <div>
                 <papper-input label="room code" 
-                              disabled="${this._private.gameIdEditable}"
-                              value="${this._private.gameId}"
+                              disabled="${this.gameIdEditable}"
+                              value="${this.gameId}"
                               @change="${this.RoomCodeChanged}"
                               >
                 </papper-input>
 
                 <papper-input label="user name" 
-                              disabled="${this._private.userIdEditable}"
-                              value="${this._private.userId}"
+                              disabled="${this.userIdEditable}"
+                              value="${this.userId}"
                               @change="${this.UserNameChanged}"
                               >
                 </papper-input>
 
-                <papper-button ?hidden="${this._private.cancelGameButtonHidden}"
-                               @click="${this._private.CancelGameButtonClicked}"
+                <papper-button ?hidden="${this.cancelGameButtonHidden}"
+                               @click="${this.CancelGameButtonClicked}"
                                >
                     "Cancel"
                 </papper-button>
 
-                <papper-button disabled="${this._private.buttonDisabled}"
+                <papper-button disabled="${this.buttonDisabled}"
                                @click="${this._private.ContextAwareButtonAction}"
                                >
-                    ${this._private.buttonContext}
+                    ${this.buttonContext}
                 </papper-button>
 
                 <logon-user-icon></logon-user-icon>
