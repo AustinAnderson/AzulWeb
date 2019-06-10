@@ -11,13 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "@aspnet/signalr": "^1.1.4",
-    "@babel/core": "^7.4.5",
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-input": "^3.0.2",
     "jquery": "^3.4.1",
     "lit-element": "^2.1.0"
   },
   "browserslist": [
-    "Chrome > 46"
+    "last 1 chrome versions"
   ]
 }

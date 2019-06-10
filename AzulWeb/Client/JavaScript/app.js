@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import {SignalRClient} from './util/signalrClient.js'
 import {ApiAccess} from './util/apiAccess.js'
+import './views/logon/logon-page.js'
 
 class Main
 {
