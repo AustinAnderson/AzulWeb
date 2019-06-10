@@ -2,8 +2,8 @@
 #buildClient: Script to build the client code and put it in wwwroot
 #Created: Sun Jun  2 16:44:39 CDT 2019
 if [[ $1 == "debug" ]]; then
-    parcel build Html/index.html -d ../Server/wwwroot/ --no-minify
+    parcel build index.html -d ../Server/wwwroot/ --no-minify
 else
-    parcel build Html/index.html -d ../Server/wwwroot/
+    parcel build index.html -d ../Server/wwwroot/
 fi;
 exit 0
