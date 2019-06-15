@@ -27,11 +27,11 @@ class LogonPage extends LitElement
         this.cancelGameButtonHidden=true;
         //intended to be overwritten with a call back for making the server cancel the game
         this.OnGameCancelled=(cancelledGameId) =>{
-            alert(LogonPage.name+"."+OnGameCancelled.name+" never assigned!");
+            alert("LogonPage.OnGameCancelled never assigned!");
         }
         //intended to be overwritten with a call back for making the server start the game
         //and the outer class to switch the view to the main game view
-        this.OnGameStart=()=>{ alert(LogonPage.name+"."+OnGameStart.name+" never assigned!"); }
+        this.OnGameStart=()=>{ alert("LogonPage.OnGameStart never assigned!"); }
         /**
          * intended to be overwritten with a call back for retrieving the new
          * game code from the server
@@ -39,8 +39,8 @@ class LogonPage extends LitElement
          * @memberof LogonButtonsAndInput
          */
         this.OnHostGameClicked=()=>{
-            alert(LogonPage.name+"."+OnHostGameClicked.name+" never assigned!");
-            return "";
+            alert("LogonPage.OnHostGameClicked never assigned!");
+            return "codeFromServer";
         }
         
         var privvar=(function(that){ return {
@@ -68,6 +68,7 @@ class LogonPage extends LitElement
             },
             contextButtonHandlers:{
                 HostNewGameClicked(){
+                    console.log(that);
                     that.gameId=that.OnHostGameClicked();
                     privvar.become.WaitForMorePlayers();
                 },
@@ -221,9 +222,9 @@ class LogonPage extends LitElement
                 </paper-input>
 
                 <paper-button ?hidden="${this.cancelGameButtonHidden}"
-                               @click=${this.CancelGameButtonClicked}
+                               @click=${this.__private.CancelGameButtonClicked}
                                >
-                    "Cancel"
+                    Cancel
                 </paper-button>
 
                 <paper-button ?disabled=${this.buttonDisabled}
