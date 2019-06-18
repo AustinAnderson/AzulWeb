@@ -7,6 +7,10 @@ class LogonPage extends LitElement
     static TagName(){ return "logon-page"; }
     static get properties(){
         return {
+            gameIdErrorMessage: {type:String},
+            userIdErrorMessage: {type:String},
+            gameIdInvalid: {type:Boolean},
+            userIdInvalid: {type:Boolean},
             gameId: {type:String},
             userId: {type:String},
             gameIdEditable: {type:Boolean},
@@ -18,6 +22,10 @@ class LogonPage extends LitElement
     }
     constructor(){
         super();
+        this.gameIdErrorMessage="";
+        this.userIdErrorMessage="";
+        this.gameIdInvalid=false;
+        this.userIdInvalid=false;
         this.gameId= "";
         this.userId= "";
         this.gameIdEditable= true;
@@ -44,10 +52,13 @@ class LogonPage extends LitElement
         }
         
         var privvar=(function(that){ return {
+            playerCount:0,
             RoomCodeChanged(newValue){
                 that.gameId=newValue;
                 if(that.gameId==""){ this.RoomCodeClearedAction();}
                 else { this.RoomCodeEnteredAction(); }
+                that.gameIdInvalid=false;
+                that.gameIdErrorMessage="";
             },
             UserNameChanged(newValue){
                 that.userId=newValue;
@@ -118,7 +129,7 @@ class LogonPage extends LitElement
                     that.userIdEditable=true;
                     privvar.ContextAwareButtonAction=privvar.contextButtonHandlers.HostNewGameClicked;
                     privvar.RoomCodeClearedAction=()=>{};
-                    privvar.RoomCodeEnteredAction=privvar.become.NeedNameToJoin;
+                    privvar.RoomCodeEnteredAction=privvar.become.ReadyToJoin;
                     privvar.UserNameClearedAction=privvar.become.NeedNameAndCode;
                     privvar.UserNameEnteredAction=()=>{};
                 },
@@ -185,39 +196,63 @@ class LogonPage extends LitElement
 
     UserAdded(connectionId,userId,playerIconSrc)
     {
+        this.__private.playerCount++;
         document.querySelector("div")
-        if(playerCount>=2){
+        if(this.__private.playerCount>=2){
             this.__private.become.ReadyToStart();
         }
     }
-    UserRemoved(userId){
-
+    UserRemoved(userId)
+    {
+        this.__private.playerCount++;
     }
     /**
      * to be called by the user when a game session is cancelled by the host
      * @memberof LogonButtonsAndInput
      */
     RoomTornDown(){
+        this.__private.playerCount=0;
         this.__private.RemoveAllUsers();
         this.gameId="";//will this fire onchange?
         this.__private.become.ReadyToHost();
+    }
+    SimulateBadRoomJoin(){
+        this.gameIdInvalid=true;
+        this.gameIdErrorMessage=`game id "${this.gameId}" doesn't exist `;
     }
 
     
     render(){
         return html`
-            <div>
-                <paper-input label="room code" 
+            <style>
+div.card {
+  width: 250px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align:center;
+}
+div.cardInner{
+    display:inline-block;
+    text-align:left;
+    width: 95%;
+}
+            </style>
+            <div class="card">
+                <div class="cardInner">
+                <paper-input id="roomInputId" label="room code" 
                               ?disabled="${!this.gameIdEditable}"
                               value="${this.gameId}"
                               @keyup="${e=>this.__private.RoomCodeChanged(e.target.value)}"
+                              ?invalid="${this.gameIdInvalid}"
+                              error-message="${this.gameIdErrorMessage}"
                               >
                 </paper-input>
 
-                <paper-input label="user name" 
+                <paper-input id="userInputId" label="user name" 
                               ?disabled="${!this.userIdEditable}"
                               value="${this.userId}"
                               @keyup="${e=>this.__private.UserNameChanged(e.target.value)}"
+                              ?invalid="${this.userIdInvalid}"
+                              error-message="${this.userIdErrorMessage}"
                               >
                 </paper-input>
 
@@ -232,6 +267,7 @@ class LogonPage extends LitElement
                                >
                     ${this.buttonContext}
                 </paper-button>
+                </div>
             </div>
             <logon-user-icon></logon-user-icon>
             <logon-user-icon></logon-user-icon>
