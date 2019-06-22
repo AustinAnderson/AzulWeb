@@ -40,15 +40,15 @@ class LogonPage extends LitElement
         //intended to be overwritten with a call back for making the server start the game
         //and the outer class to switch the view to the main game view
         this.OnGameStart=()=>{ alert("LogonPage.OnGameStart never assigned!"); }
-        /**
-         * intended to be overwritten with a call back for retrieving the new
-         * game code from the server
-         * @returns {string} server created game code
-         * @memberof LogonButtonsAndInput
-         */
-        this.OnHostGameClicked=()=>{
+         
+        /** 
+          intended to be overwritten with a call back for retrieving the new
+          game code from the server
+          takes a function to set the gameid as an argument
+        */
+        this.OnHostGameClicked=(setGameIdCallBack)=>{
             alert("LogonPage.OnHostGameClicked never assigned!");
-            return "codeFromServer";
+            setGameIdCallBack("someCodeFromServer");
         }
         
         var privvar=(function(that){ return {
@@ -80,7 +80,10 @@ class LogonPage extends LitElement
             contextButtonHandlers:{
                 HostNewGameClicked(){
                     console.log(that);
-                    that.gameId=that.OnHostGameClicked();
+                    that.OnHostGameClicked(x=>{
+                        console.log("got game id from server: "+x);
+                        that.gameId=x
+                    });
                     privvar.become.WaitForMorePlayers();
                 },
                 JoinGameClicked(){

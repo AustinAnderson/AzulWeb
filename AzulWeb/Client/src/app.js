@@ -26,13 +26,12 @@ class Main
         );
         this.restClient=new ApiAccess();
         var logonPage=document.querySelector("logon-page");
-        logonPage.OnHostGameClicked=()=>{ 
+        logonPage.OnHostGameClicked=(setGameCallback)=>{ 
             var gameId="";
             console.log("call api request new game");
             this.restClient.requestNewGame()
-                      .done(res=>gameId=res)
+                      .done(res=>setGameCallback(res))
                       .fail(()=>alert("unable to get new game from server"));
-            return gameId;
         }
         //logonPage.OnGameCancelled=
         //logonPage.OnGameStart=
