@@ -15,12 +15,16 @@ namespace Server.Controllers
     public class MatchMakingController : ControllerBase
     {
         private GameCreator gameCreator;
+        public MatchMakingController(GameCreator gameCreator){
+            this.gameCreator=gameCreator;
+        }
         private GameContentHub hub;
         // GET api/values
         [HttpGet("requestNewGame")]
         public ActionResult<string> GenerateGameId()
         {
-            return Ok(gameCreator.GenerateNewGameCode());
+            string newCode=gameCreator.GenerateNewGameCode();
+            return Ok(newCode);
         }
 
         [HttpPost("startNewGame/{gameId}")]

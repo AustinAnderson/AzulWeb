@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using System.IO;
 using Microsoft.Extensions.FileProviders;
 using Server.SignalRHubs;
+using Server.MatchMaking;
+using Server.Logic;
 
 namespace Server
 {
@@ -30,6 +32,10 @@ namespace Server
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSignalR();
+            services.AddScoped<GameCreator>();
+            //todo, get guids static from somewhere or else if server goes down and restarts
+            //old clients can't talk to it
+            services.AddScoped(p=>new PlayerTokenMapHandler(Guid.NewGuid(),Guid.NewGuid()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

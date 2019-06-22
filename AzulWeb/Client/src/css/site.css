@@ -54,3 +54,30 @@ body {
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
 }
+.button {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border: 0;
+  -webkit-box-shadow: 0 1px 1px 0 #000333;
+  -moz-box-shadow: 0 1px 1px 0 #000333;
+  box-shadow: 0 1px 1px 0 #000333;
+  cursor: pointer;
+  font-size: 100%;
+  min-width: 70px;
+  padding: 10px 25px;
+  text-decoration: none;
+  text-align: center;
+  overflow: visible;
+  font-family: Arial,sans-serif;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+.button:active {
+  -webkit-box-shadow: 0 -1px -1px 0 #000333;
+  -moz-box-shadow: 0 -1px -1px 0 #000333;
+  box-shadow: 0 -1px -1px 0 #000333;
+  transform: translate(1px, 1px);
+  -webkit-transform: translate(1px, 1px);
+}

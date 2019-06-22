@@ -25,12 +25,11 @@ class Main
             userId=>this.signalrClient.NotifyServerGameJoined(userId,this.gameState.gameId)
         );
         this.restClient=new ApiAccess();
-        /*
         var logonPage=document.querySelector("logon-page");
         logonPage.OnHostGameClicked=()=>{ 
             var gameId="";
             console.log("call api request new game");
-            restClient.requestNewGame()
+            this.restClient.requestNewGame()
                       .done(res=>gameId=res)
                       .fail(()=>alert("unable to get new game from server"));
             return gameId;
@@ -38,7 +37,6 @@ class Main
         //logonPage.OnGameCancelled=
         //logonPage.OnGameStart=
         logonPage.hidden=false;
-        */
     }
     updateGame(stateChanges){
         console.log(stateChanges);
