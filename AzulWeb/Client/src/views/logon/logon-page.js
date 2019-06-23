@@ -272,10 +272,10 @@ div.cardInner{
                 </paper-button>
                 </div>
             </div>
-            <logon-user-icon></logon-user-icon>
-            <logon-user-icon></logon-user-icon>
-            <logon-user-icon></logon-user-icon>
-            <logon-user-icon></logon-user-icon>
+            <logon-user-icon iconSrc=""></logon-user-icon>
+            <logon-user-icon iconSrc=""></logon-user-icon>
+            <logon-user-icon iconSrc=""></logon-user-icon>
+            <logon-user-icon iconSrc=""></logon-user-icon>
         `;
     }
 }
