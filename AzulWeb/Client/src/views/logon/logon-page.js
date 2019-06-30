@@ -2,10 +2,7 @@ import {LitElement,html} from 'lit-element';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-input.js';
 import './logon-user-icon.js'
-const redIcon=require('../../img/iconRed.svg')
-const blackIcon=require('../../img/iconBlack.svg')
-const blueIcon=require('../../img/iconBlue.svg')
-const yellowIcon=require('../../img/iconYellow.svg')
+import {playerIndexIconMap} from '../playerIndexIconMap.js'
 
 class LogonPage extends LitElement
 {
@@ -22,7 +19,15 @@ class LogonPage extends LitElement
             userIdEditable: {type:Boolean},
             buttonContext: {type:String},
             buttonDisabled: {type:Boolean},
-            cancelGameButtonHidden: {type:Boolean}
+            cancelGameButtonHidden: {type:Boolean},
+            /*
+            [{
+                connectionId,
+                userId,
+                playerIndex
+            }]
+            */
+            playerList: {type:Array}
         };
     }
     constructor(){
@@ -38,6 +43,8 @@ class LogonPage extends LitElement
         this.buttonContext="Host Game";
         this.buttonDisabled=true;
         this.cancelGameButtonHidden=true;
+        this.playerList=[];
+        console.log(playerIndexIconMap[0])
         //intended to be overwritten with a call back for making the server cancel the game
         this.OnGameCancelled=(cancelledGameId) =>{
             alert("LogonPage.OnGameCancelled never assigned!");
@@ -75,9 +82,6 @@ class LogonPage extends LitElement
             UserNameEnteredAction:()=>{},
             UserNameClearedAction:()=>{},
             ContextAwareButtonAction:()=>{},
-            RemoveAllUsers(){
-
-            },
             CancelGameButtonClicked(){
                 that.OnGameCancelled(that.gameId);
                 that.RoomTornDown();
@@ -202,31 +206,21 @@ class LogonPage extends LitElement
         this.__private.become.NeedNameAndCode();
     }
 
-    UserAdded(connectionId,userId,playerIconSrc)
+    SetPlayerList(newPlayerList)
     {
-        this.__private.playerCount++;
-        document.querySelector("div")
-        if(this.__private.playerCount>=2){
+        this.playerList=newPlayerList;
+        if(this.playerList.length>=2){
             this.__private.become.ReadyToStart();
         }
-    }
-    UserRemoved(userId)
-    {
-        this.__private.playerCount++;
     }
     /**
      * to be called by the user when a game session is cancelled by the host
      * @memberof LogonButtonsAndInput
      */
     RoomTornDown(){
-        this.__private.playerCount=0;
-        this.__private.RemoveAllUsers();
+        this.playerList=[];
         this.gameId="";//will this fire onchange?
         this.__private.become.ReadyToHost();
-    }
-    SimulateBadRoomJoin(){
-        this.gameIdInvalid=true;
-        this.gameIdErrorMessage=`game id "${this.gameId}" doesn't exist `;
     }
 
     
@@ -285,10 +279,13 @@ class LogonPage extends LitElement
                 </div>
             </div>
             <div class="users">
-                <logon-user-icon iconSrc=${redIcon} userId="bob"></logon-user-icon>
-                <logon-user-icon iconSrc=${blueIcon} userId="a real long one"></logon-user-icon>
-                <logon-user-icon iconSrc=${blackIcon} userId="some name"></logon-user-icon>
-                <logon-user-icon iconSrc=${yellowIcon} userId="asdfasd"></logon-user-icon>
+                ${this.playerList.map(player=>html`
+                    <logon-user-icon
+                        userId="${player.userId}"
+                        iconSrc="${playerIndexIconMap[player.playerIndex]}"
+                    >
+                    </logon-user-icon>
+                `)}
             </div>
         </div>
         `;

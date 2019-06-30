@@ -18,7 +18,7 @@ class LogonUserIcon extends LitElement
         return html`
             <style>
 div.card {
-    font-size:60px;
+    font-size:42px;
     width: 8em;
     height: 1em;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
