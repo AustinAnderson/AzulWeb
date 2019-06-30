@@ -7,13 +7,11 @@ class LogonUserIcon extends LitElement
         return {
             userId: {type:String},
             iconSrc: {type:String},
-            hidden: {type:Boolean}
         }
     }
     constructor()
     {
         super();
-        //this.hidden=true;
     }
     render()
     {
@@ -50,7 +48,7 @@ img{
     font-size:.6em;
 }
             </style>
-            <div class="card" ?hidden="${this.hidden}">
+            <div class="card">
                 <img src="${this.iconSrc}" />
                 <div class="cardInner">
                     <span class="text">${this.userId}</span>

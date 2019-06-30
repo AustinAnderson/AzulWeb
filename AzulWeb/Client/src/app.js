@@ -35,7 +35,6 @@ class Main
         }
         //logonPage.OnGameCancelled=
         //logonPage.OnGameStart=
-        logonPage.hidden=false;
     }
     updateGame(stateChanges){
         console.log(stateChanges);

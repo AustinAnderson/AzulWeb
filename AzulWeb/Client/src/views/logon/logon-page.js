@@ -1,6 +1,11 @@
 import {LitElement,html} from 'lit-element';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-input.js';
+import './logon-user-icon.js'
+const redIcon=require('../../img/iconRed.svg')
+const blackIcon=require('../../img/iconBlack.svg')
+const blueIcon=require('../../img/iconBlue.svg')
+const yellowIcon=require('../../img/iconYellow.svg')
 
 class LogonPage extends LitElement
 {
@@ -228,17 +233,24 @@ class LogonPage extends LitElement
     render(){
         return html`
             <style>
-div.card {
-  width: 250px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  text-align:center;
+.parentDiv{
+    display:flex;
 }
-div.cardInner{
+.users{
+    display:block;
+}
+.card {
+    width: 250px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-align:center;
+}
+.cardInner{
     display:inline-block;
     text-align:left;
     width: 95%;
 }
-            </style>
+        </style>
+        <div class="parentDiv">
             <div class="card">
                 <div class="cardInner">
                 <paper-input id="roomInputId" label="room code" 
@@ -272,10 +284,13 @@ div.cardInner{
                 </paper-button>
                 </div>
             </div>
-            <logon-user-icon iconSrc=""></logon-user-icon>
-            <logon-user-icon iconSrc=""></logon-user-icon>
-            <logon-user-icon iconSrc=""></logon-user-icon>
-            <logon-user-icon iconSrc=""></logon-user-icon>
+            <div class="users">
+                <logon-user-icon iconSrc=${redIcon} userId="bob"></logon-user-icon>
+                <logon-user-icon iconSrc=${blueIcon} userId="a real long one"></logon-user-icon>
+                <logon-user-icon iconSrc=${blackIcon} userId="some name"></logon-user-icon>
+                <logon-user-icon iconSrc=${yellowIcon} userId="asdfasd"></logon-user-icon>
+            </div>
+        </div>
         `;
     }
 }
