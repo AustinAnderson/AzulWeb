@@ -32,7 +32,7 @@ namespace Server.MatchMaking
             {
                 GameId=gameId,
                 SharedData=new SharedDataModel(),
-                PlayerData=connectionIds.Select(connId=>new PlayerDataModel(connId)).ToList(),
+                PlayerData=new PlayerDataModel()
             };
             newGame.SharedData.Factories=new FactoryModel[connectionIds.Count*2+1];
             for(int i=0;i<newGame.SharedData.Factories.Length;i++)
