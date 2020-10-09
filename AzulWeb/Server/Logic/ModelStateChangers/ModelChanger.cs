@@ -33,37 +33,39 @@ namespace Server.Logic.ModelStateChangers
             this.wallTiler=wallTiler;
             this.tracker=tracker;
         }
-        public ResponseModel ProcessRequest(ClientRequestModel request){
+        public ResponseModel ProcessRequest(ClientRequestModel request,GameStateModel state){
+
+            var action = new GameActionModel(request.Action, state, request.GameStateHash);
             ResponseModel response=new ResponseModel();
-            var oldState=request.GameState.DeepCopy();
-            factoryOfferPhaseChanger.ProcessClientChanges(request);
-            var changesThisStep=tracker.FindChanges(oldState,request.GameState);
+            var oldState=action.GameState.DeepCopy();
+            factoryOfferPhaseChanger.ProcessClientChanges(action);
+            var changesThisStep=tracker.FindChanges(oldState,action.GameState);
             response.FactoryOfferPhaseTileChanges=changesThisStep.TileChanges;
-            if(roundEndHandler.ActionEndsRound(request))
+            if(roundEndHandler.ActionEndsRound(action))
             {
-                oldState=request.GameState.DeepCopy();
-                wallTiler.MovePatternLineTilesToWalls(request);
-                changesThisStep=tracker.FindChanges(oldState,request.GameState);
+                oldState=action.GameState.DeepCopy();
+                wallTiler.MovePatternLineTilesToWalls(action);
+                changesThisStep=tracker.FindChanges(oldState,action.GameState);
                 response.WallTileMoves=new WallMovePhaseModel{
                     WallChanges= changesThisStep.WallChanges,
                     Discards=changesThisStep.TileChanges
                 };
-                oldState=request.GameState.DeepCopy();
-                scoringCalculator.UpdateScores(request,response.WallTileMoves.WallChanges);
-                response.GameOver=roundEndHandler.GameHasEnded(request);
+                oldState=action.GameState.DeepCopy();
+                scoringCalculator.UpdateScores(action,response.WallTileMoves.WallChanges);
+                response.GameOver=roundEndHandler.GameHasEnded(action);
                 if(response.GameOver)
                 {
-                    scoringCalculator.AddFinalBonusesToScore(request);
+                    scoringCalculator.AddFinalBonusesToScore(action);
                 }
                 else{
-                    roundEndHandler.SetupNextRound(request);
+                    roundEndHandler.SetupNextRound(action);
                 }
-                changesThisStep=tracker.FindChanges(oldState,request.GameState);
+                changesThisStep=tracker.FindChanges(oldState,action.GameState);
                 response.ScoreChanges=changesThisStep.ScoreChanges;
                 response.NextRoundSetupChanges=changesThisStep.TileChanges;
-                UpdateLeadingPlayer(response,request.GameState.PlayerData);
+                UpdateLeadingPlayer(response,action.GameState.PlayerData);
             }
-            response.NewGameStateHash=request.GameState.GetHashCode();
+            response.NewGameStateHash=action.GameState.GetHashCode();
             return response;
         }
         private void UpdateLeadingPlayer(ResponseModel respone, List<PlayerDataModel> playerData){

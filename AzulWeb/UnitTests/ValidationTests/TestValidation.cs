@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models.Client;
+using Models.Server;
 using Server;
 using Server.Exceptions;
 using Server.Logic;
@@ -20,7 +21,7 @@ namespace UnitTests.ValidationTests
         [TestMethod]
         public void CatchClientWithGarbageToken(){
             ClientActionValidator validator=new ClientActionValidator(mapHandler);
-            ClientRequestModel model=GetBaseRequestModel();
+            GameActionModel model=GetBaseRequestModel();
             model.Action=new ActionDescriptionModel
             {
                 PlayerToken=Guid.NewGuid(),
@@ -49,7 +50,7 @@ namespace UnitTests.ValidationTests
         [TestMethod]
         public void CatchClientGoesWhenNotItsTurn(){
             ClientActionValidator validator=new ClientActionValidator(mapHandler);
-            ClientRequestModel model=GetBaseRequestModel();
+            GameActionModel model=GetBaseRequestModel();
             model.Action=new ActionDescriptionModel
             {
                 PlayerToken=playerTwo,
@@ -78,7 +79,7 @@ namespace UnitTests.ValidationTests
         [TestMethod]
         public void CatchClientServerMismatch(){
             ClientActionValidator validator=new ClientActionValidator(mapHandler);
-            ClientRequestModel model=GetBaseRequestModel();
+            GameActionModel model=GetBaseRequestModel();
             model.Action=new ActionDescriptionModel
             {
                 PlayerToken=playerOne,
@@ -199,12 +200,12 @@ namespace UnitTests.ValidationTests
                 response.Message
             );
         }
-        private ClientRequestModel GetBaseRequestModel(){
+        private GameActionModel GetBaseRequestModel(){
             var dict=new Dictionary<Guid, int>{
                 {playerOne,0},
                 {playerTwo,1}
             };
-            var model=new ClientRequestModel{
+            var model=new GameActionModel{
 
                 GameState=new GameStateModel{
                     PlayerTokenMapEnc=mapHandler.EncryptedMap(dict),

@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Client;
+using Models.Server;
 
 namespace Server.Logic.ModelStateChangers
 {
     public class RoundEndHandler
     {
         private readonly Random rng=new Random(DateTime.Now.GetHashCode());
-        public bool ActionEndsRound(ClientRequestModel request)
+        public bool ActionEndsRound(GameActionModel request)
         {
             //if center of table is empty and all factories are empty, round is done
             bool phaseDone=request.GameState.SharedData.CenterOfTable.Count==0;
@@ -18,7 +19,7 @@ namespace Server.Logic.ModelStateChangers
             }
             return phaseDone;
         }
-        public bool GameHasEnded(ClientRequestModel request){
+        public bool GameHasEnded(GameActionModel request){
             bool gameOver=false;
             var playerData=request.GameState.PlayerData;
             for(int i=0;i<playerData.Count;i++){
@@ -33,7 +34,7 @@ namespace Server.Logic.ModelStateChangers
             return gameOver;
         }
 
-        public void SetupNextRound(ClientRequestModel request)
+        public void SetupNextRound(GameActionModel request)
         {
             DiscardTableCenter(request);
             var firstPlayerMarker=DiscardFloorLinesAndPluckFirstPlayerMarker(request);
@@ -50,7 +51,7 @@ namespace Server.Logic.ModelStateChangers
                 }
             }
         }
-        private void DiscardTableCenter(ClientRequestModel request){
+        private void DiscardTableCenter(GameActionModel request){
             foreach(var tile in request.GameState.SharedData.CenterOfTable){
                 request.GameState.SharedData.DiscardPile.Add(tile);
             }
@@ -69,7 +70,7 @@ namespace Server.Logic.ModelStateChangers
             }
             return drawn;
         }
-        private TileModel DiscardFloorLinesAndPluckFirstPlayerMarker(ClientRequestModel request){
+        private TileModel DiscardFloorLinesAndPluckFirstPlayerMarker(GameActionModel request){
             TileModel firstPlayerMarker=null;
             foreach(var playerData in request.GameState.PlayerData)
             {

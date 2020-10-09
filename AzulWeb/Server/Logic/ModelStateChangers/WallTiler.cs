@@ -8,14 +8,14 @@ namespace Server.Logic.ModelStateChangers
 {
     public class WallTiler
     {
-        public void MovePatternLineTilesToWalls(ClientRequestModel request)
+        public void MovePatternLineTilesToWalls(GameActionModel request)
         {
             for(int i=0;i<request.GameState.PlayerData.Count;i++){
                 MoveFullPatternLinesToWall(request,i);
             }
         }
         private void DiscardRemainingPatternLineTiles(
-            ClientRequestModel request,FixedLengthTileModelQueue patternLine 
+            GameActionModel request,FixedLengthTileModelQueue patternLine 
         )
         {
             while(!patternLine.IsEmpty)
@@ -24,7 +24,7 @@ namespace Server.Logic.ModelStateChangers
                 if(popped!=null) request.GameState.SharedData.DiscardPile.Add(popped);
             }
         }
-        private void MoveFullPatternLinesToWall(ClientRequestModel request,int playerIndex){
+        private void MoveFullPatternLinesToWall(GameActionModel request,int playerIndex){
             var playerData=request.GameState.PlayerData[playerIndex];
             var layout=request.GameState.SharedData.Config.WallLayoutToMatch;
             for(int i=0;i<playerData.PatternLines.IndexLimit;i++){

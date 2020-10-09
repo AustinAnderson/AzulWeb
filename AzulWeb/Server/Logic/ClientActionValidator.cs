@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Client;
+using Models.Server;
 using Server.Exceptions;
 using Server.Models.ServerModels.ErrorModels;
 
@@ -13,7 +14,7 @@ namespace Server.Logic
         public ClientActionValidator(PlayerTokenMapHandler mapHandler){
             this.mapHandler=mapHandler;
         }
-        public ActionValidationFailedModel ValidateRequest(ClientRequestModel request)
+        public ActionValidationFailedModel ValidateRequest(GameActionModel request)
         {
             int hash=request.GameState.GetHashCode();
             if(request.GameStateHash!=request.GameState.GetHashCode()){

@@ -8,7 +8,7 @@ namespace Server.Logic.ModelStateChangers
 {
     public class ScoreChangeCalculator
     {
-        public void UpdateScores(ClientRequestModel request,List<WallChangeModel> newAdditions){
+        public void UpdateScores(GameActionModel request,List<WallChangeModel> newAdditions){
             for(int i=0;i<request.GameState.PlayerData.Count;i++)
             {
                 UpdateScoreForPlayer(
@@ -21,7 +21,7 @@ namespace Server.Logic.ModelStateChangers
                 );
             }
         }
-        public void AddFinalBonusesToScore(ClientRequestModel request){
+        public void AddFinalBonusesToScore(GameActionModel request){
             //TODO: how to best display where the bonuses came from and what they were
             for(int i=0;i<request.GameState.PlayerData.Count;i++){
                 var playerData=request.GameState.PlayerData[i];

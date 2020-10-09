@@ -14,7 +14,7 @@ namespace Server.Logic.ModelStateChangers
             this.mapHandler=mapHandler;
         }
         //assumes request model has been validated
-        public void ProcessClientChanges(ClientRequestModel request)
+        public void ProcessClientChanges(GameActionModel request)
         {
             if(request.Action.FromFactory)
             {
@@ -25,7 +25,7 @@ namespace Server.Logic.ModelStateChangers
                 HandleMoveFromCenterTable(request);
             }
         }
-        private void HandleMoveFromFactory(ClientRequestModel request)
+        private void HandleMoveFromFactory(GameActionModel request)
         {
             int factoryIndex=request.Action.FactoryIndex;
             int patternLineIndex=request.Action.PatternLineIndex;
@@ -49,7 +49,7 @@ namespace Server.Logic.ModelStateChangers
                 }
             }
         }
-        private void HandleMoveFromCenterTable(ClientRequestModel request)
+        private void HandleMoveFromCenterTable(GameActionModel request)
         {
             int patternLineIndex=request.Action.PatternLineIndex;
             int playerIndex=request.GameState.SharedData.CurrentTurnsPlayersIndex;
